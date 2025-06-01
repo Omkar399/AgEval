@@ -110,7 +110,7 @@ def load_evaluation_data():
         
         # New adaptive evaluation files
         'adaptive_results': 'data/adaptive_evaluation_results.json',
-        'detailed_adaptive': 'data/detailed_adaptive_results.json',
+        'detailed_adaptive': 'data/detailed_adaptive_results.json',  # This is the key file
         'adaptive_analysis': 'data/adaptive_comprehensive_analysis.json',
         'adaptive_base_tasks': 'data/adaptive_base_tasks.json',
         
@@ -660,7 +660,7 @@ async def run_evaluation(request: Request):
         evaluation_state.update({
             "running": True,
             "progress": 0,
-            "current_task": "Initializing evaluation...",
+            "current_task": f"Initializing {evaluation_type} evaluation for all 9 agents...",
             "current_step": "",
             "current_agent_response": "",
             "thinking_process": [],
@@ -677,7 +677,7 @@ async def run_evaluation(request: Request):
             "current_task_id": "",
             "current_difficulty": 0.0,
             "stage": "initializing",
-            "substage": "Preparing evaluation environment...",
+            "substage": "Preparing multi-agent evaluation environment...",
             "irt_updates": [],
             "evaluation_type": evaluation_type
         })
@@ -687,7 +687,7 @@ async def run_evaluation(request: Request):
         
         return JSONResponse(content={
             "status": "completed", 
-            "message": f"{evaluation_type.title()} evaluation completed successfully",
+            "message": f"{evaluation_type.title()} evaluation completed successfully for all 9 agents",
             "result": result
         })
         
@@ -731,14 +731,14 @@ async def run_evaluation_with_progress(evaluation_type: str):
         # Determine script to use
         if evaluation_type == "adaptive":
             script = "demo_evaluation.py"  # Use demo for realistic progress
-            evaluation_state["substage"] = "Starting adaptive evaluation with IRT..."
+            evaluation_state["substage"] = "Starting multi-agent adaptive evaluation with IRT..."
         else:
             script = "demo_evaluation.py"  # Use demo for both modes for now
-            evaluation_state["substage"] = "Starting static evaluation..."
+            evaluation_state["substage"] = "Starting multi-agent static evaluation..."
         
         # Update state
         evaluation_state["stage"] = "running"
-        evaluation_state["current_task"] = f"Running {evaluation_type} evaluation..."
+        evaluation_state["current_task"] = f"Running {evaluation_type} evaluation for all 9 agents..."
         await manager.broadcast({"type": "evaluation_update", "data": evaluation_state})
         
         # Run the evaluation script with real-time output
@@ -817,8 +817,8 @@ async def run_evaluation_with_progress(evaluation_type: str):
         evaluation_state["running"] = False
         evaluation_state["progress"] = 100
         evaluation_state["stage"] = "complete"
-        evaluation_state["substage"] = "Evaluation completed successfully!"
-        evaluation_state["current_task"] = "Processing final results..."
+        evaluation_state["substage"] = "Multi-agent evaluation completed successfully!"
+        evaluation_state["current_task"] = "Processing final results for all 9 agents..."
         evaluation_state["end_time"] = datetime.now().isoformat()
         
         # Generate mock results for demo
@@ -1307,12 +1307,50 @@ async def get_adaptive_detailed_overview():
     """Get detailed adaptive evaluation overview with enhanced metrics"""
     try:
         data = load_evaluation_data()
+        
+        # Check for detailed_adaptive first (new format)
+        detailed_adaptive = data.get('detailed_adaptive', {})
+        if detailed_adaptive:
+            # Use the new format from detailed_adaptive_results.json
+            adaptive_eval_results = detailed_adaptive.get('adaptive_evaluation_results', {})
+            performance_analysis = detailed_adaptive.get('performance_analysis', {})
+            session_metadata = detailed_adaptive.get('session_metadata', {})
+            detailed_responses = detailed_adaptive.get('detailed_responses', [])
+            
+            overview = {
+                "adaptive_evaluation_results": adaptive_eval_results,
+                "performance_analysis": performance_analysis,
+                "session_metadata": session_metadata,
+                "evaluation_summary": {
+                    "final_ability_estimate": adaptive_eval_results.get('final_ability_estimate', 0),
+                    "ability_percentile": adaptive_eval_results.get('ability_percentile', 0),
+                    "convergence_achieved": adaptive_eval_results.get('convergence_achieved', False),
+                    "total_items_administered": adaptive_eval_results.get('total_items_administered', 0),
+                    "ability_standard_error": adaptive_eval_results.get('ability_standard_error', 0)
+                },
+                "performance_metrics": {
+                    "average_performance": performance_analysis.get('average_performance', 0),
+                    "performance_consistency": performance_analysis.get('performance_consistency', 0),
+                    "difficulty_range_explored": performance_analysis.get('difficulty_range_explored', 0),
+                    "reasoning_complexity": len(detailed_responses)
+                },
+                "efficiency_analysis": {
+                    "efficiency_gain": 1.0 - (adaptive_eval_results.get('total_items_administered', 15) / 15.0) if adaptive_eval_results.get('total_items_administered', 0) > 0 else 0,
+                    "tasks_saved": 15 - adaptive_eval_results.get('total_items_administered', 15),
+                    "time_reduction": performance_analysis.get('time_reduction', 0),
+                    "precision_improvement": performance_analysis.get('precision_improvement', 0)
+                }
+            }
+            
+            return JSONResponse(content=overview)
+        
+        # Fallback to old format
         adaptive_data = data.get('adaptive_results', {})
         
         if not adaptive_data:
             return JSONResponse(content={"status": "no_data", "message": "No adaptive evaluation data available"})
         
-        # Extract detailed metrics
+        # Extract detailed metrics from old format
         eval_results = adaptive_data.get('adaptive_evaluation_results', {})
         if isinstance(eval_results, dict) and 'adaptive_evaluation_results' in eval_results:
             eval_results = eval_results['adaptive_evaluation_results']
@@ -1874,18 +1912,45 @@ async def get_agent_evolved_prompts(agent_id: str):
     try:
         data = load_evaluation_data()
         
+        # Load proper task descriptions from adaptive_base_tasks.json
+        proper_base_prompts = {}
+        try:
+            with open('backend/data/adaptive_base_tasks.json', 'r') as f:
+                base_tasks = json.load(f)
+                for task in base_tasks:
+                    proper_base_prompts[task['id']] = task['prompt']
+        except FileNotFoundError:
+            # Fallback to data/tasks.json if backend file not found
+            tasks_data = data.get('tasks', [])
+            for task in tasks_data:
+                proper_base_prompts[task['id']] = task['prompt']
+        
         # Get adaptive data from multiple sources
         detailed_responses = []
         
-        # Try detailed_adaptive first
-        detailed_adaptive = data.get('detailed_adaptive', {})
-        if detailed_adaptive and 'detailed_responses' in detailed_adaptive:
-            detailed_responses.extend(detailed_adaptive['detailed_responses'])
+        # Try backend/data/adaptive_evaluation_results.json first (has actual evolved prompts)
+        backend_adaptive_file = 'backend/data/adaptive_evaluation_results.json'
+        if os.path.exists(backend_adaptive_file):
+            try:
+                with open(backend_adaptive_file, 'r') as f:
+                    backend_data = json.load(f)
+                    # The detailed_responses are nested inside adaptive_evaluation_results
+                    adaptive_eval_results = backend_data.get('adaptive_evaluation_results', {})
+                    if 'detailed_responses' in adaptive_eval_results:
+                        detailed_responses.extend(adaptive_eval_results['detailed_responses'])
+            except Exception as e:
+                print(f"Error loading backend adaptive data: {e}")
         
-        # Try adaptive_results as fallback
-        adaptive_results = data.get('adaptive_results', {})
+        # Try main data directory as fallback
+        adaptive_results = data.get('adaptive_evaluation_results', {})
         if adaptive_results and 'detailed_responses' in adaptive_results:
             detailed_responses.extend(adaptive_results['detailed_responses'])
+        
+        # Try detailed_adaptive as final fallback (but this usually only has trajectory data)
+        if not detailed_responses:
+            detailed_adaptive = data.get('detailed_adaptive', {})
+            if detailed_adaptive and 'detailed_responses' in detailed_adaptive:
+                detailed_responses.extend(detailed_adaptive['detailed_responses'])
         
         # Filter responses for this specific agent/task
         agent_evolved_prompts = []
@@ -1893,27 +1958,33 @@ async def get_agent_evolved_prompts(agent_id: str):
             task_id = response.get('task_id', '')
             
             # Extract base task ID from adaptive task ID
-            # Format: "adaptive_atomic_2_0.80" -> "atomic_2"
+            # Format: "adaptive_atomic_1_1_0.20" -> "atomic_1"
             base_task_id = task_id
             if task_id.startswith('adaptive_'):
-                # Remove "adaptive_" prefix and difficulty suffix
-                # adaptive_atomic_2_0.80 -> atomic_2_0.80 -> atomic_2
+                # Remove "adaptive_" prefix and extract tier_number pattern
+                # adaptive_atomic_1_1_0.20 -> atomic_1_1_0.20 -> atomic_1
                 temp_id = task_id.replace('adaptive_', '')
-                # Split by underscore and take first two parts
+                # Split by underscore: ["atomic", "1", "1", "0.20"]
                 parts = temp_id.split('_')
-                if len(parts) >= 2:
-                    # Check if last part is a number (difficulty), if so remove it
+                if len(parts) >= 3:
+                    # Take first two parts: "atomic_1"
+                    base_task_id = f"{parts[0]}_{parts[1]}"
+                elif len(parts) >= 2:
                     try:
-                        float(parts[-1])  # If this succeeds, it's a difficulty value
+                        # If last part is a float, it's a difficulty value - remove it
+                        float(parts[-1])
                         base_task_id = '_'.join(parts[:-1])
                     except ValueError:
                         # Not a number, keep all parts
-                        base_task_id = '_'.join(parts)
+                        base_task_id = temp_id
                 else:
                     base_task_id = temp_id
             
             # Check if this response matches the agent (task)
-            if base_task_id == agent_id or task_id == agent_id:
+            if base_task_id == agent_id:
+                # Use proper detailed base prompt instead of generic placeholder
+                proper_base_prompt = proper_base_prompts.get(base_task_id, response.get('base_prompt', ''))
+                
                 evolved_prompt_data = {
                     'task_id': task_id,
                     'base_task_id': base_task_id,
@@ -1922,34 +1993,31 @@ async def get_agent_evolved_prompts(agent_id: str):
                     'reasoning_steps': response.get('reasoning_steps', 0),
                     'time_taken': response.get('time_taken', 0),
                     'evolved_prompt': response.get('evolved_prompt', ''),
-                    'base_prompt': response.get('base_prompt', ''),
+                    'base_prompt': proper_base_prompt,  # Use the proper detailed task description
                     'agent_response': response.get('agent_response', ''),
                     'evolution_type': response.get('evolution_type', 'Adaptive'),
-                    'complexity_score': len(response.get('evolved_prompt', '')) / max(len(response.get('base_prompt', '')), 1) if response.get('evolved_prompt') and response.get('base_prompt') else 1.0
+                    'complexity_score': len(response.get('evolved_prompt', '')) / max(len(proper_base_prompt), 1) if response.get('evolved_prompt') and proper_base_prompt else 1.0
                 }
                 agent_evolved_prompts.append(evolved_prompt_data)
         
         # If no adaptive matches found, try to get base task prompts from adaptive_base_tasks
         if not agent_evolved_prompts:
-            adaptive_base_tasks = data.get('adaptive_base_tasks', [])
-            for task in adaptive_base_tasks:
-                if task.get('id') == agent_id:
-                    # Create a basic evolved prompt entry for base tasks
-                    base_prompt_data = {
-                        'task_id': agent_id,
-                        'base_task_id': agent_id,
-                        'difficulty': 0.5,  # Default difficulty
-                        'performance': 0,
-                        'reasoning_steps': 0,
-                        'time_taken': 0,
-                        'evolved_prompt': 'No evolved prompts generated for this agent yet.',
-                        'base_prompt': task.get('prompt', 'No base prompt available'),
-                        'agent_response': '',
-                        'evolution_type': 'Base Task',
-                        'complexity_score': 1.0
-                    }
-                    agent_evolved_prompts.append(base_prompt_data)
-                    break
+            # Check if we have a proper base prompt for this agent
+            if agent_id in proper_base_prompts:
+                base_prompt_data = {
+                    'task_id': agent_id,
+                    'base_task_id': agent_id,
+                    'difficulty': 0.5,  # Default difficulty
+                    'performance': 0,
+                    'reasoning_steps': 0,
+                    'time_taken': 0,
+                    'evolved_prompt': 'No evolved prompts generated for this agent yet.',
+                    'base_prompt': proper_base_prompts[agent_id],  # Use proper detailed task
+                    'agent_response': '',
+                    'evolution_type': 'Base Task',
+                    'complexity_score': 1.0
+                }
+                agent_evolved_prompts.append(base_prompt_data)
         
         # Sort by difficulty if we have multiple responses
         if len(agent_evolved_prompts) > 1:

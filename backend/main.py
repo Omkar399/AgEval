@@ -97,9 +97,10 @@ def load_evaluation_data() -> Dict[str, Any]:
     # Check if we need to refresh (cache for 30 seconds)
     if _last_refresh and (datetime.now() - _last_refresh).seconds < 30:
         return _cached_data
-    
+
     data = {}
-    data_dir = Path(__file__).parent.parent / "data"
+    # Use backend data directory instead of parent data directory
+    data_dir = Path(__file__).parent / "data"
     
     try:
         # Core evaluation files
@@ -121,10 +122,14 @@ def load_evaluation_data() -> Dict[str, Any]:
         if (data_dir / "canonical_metrics.json").exists():
             data["canonical_metrics"] = load_json(str(data_dir / "canonical_metrics.json"))
         
-        if (data_dir / "tasks.json").exists():
+        # Try tasks.json in the parent directory first, then backend
+        parent_data_dir = Path(__file__).parent.parent / "data"
+        if (parent_data_dir / "tasks.json").exists():
+            data["tasks"] = load_json(str(parent_data_dir / "tasks.json"))
+        elif (data_dir / "tasks.json").exists():
             data["tasks"] = load_json(str(data_dir / "tasks.json"))
         
-        # Adaptive evaluation files
+        # Adaptive evaluation files - these contain the evolved prompts
         adaptive_files = [
             "adaptive_evaluation_results.json",
             "detailed_adaptive_results.json", 
@@ -139,10 +144,11 @@ def load_evaluation_data() -> Dict[str, Any]:
         _cached_data = data
         _last_refresh = datetime.now()
         
+        return data
+        
     except Exception as e:
         logging.error(f"Error loading evaluation data: {e}")
-        
-    return data
+        return data
 
 @app.get("/")
 async def root():

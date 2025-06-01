@@ -499,15 +499,36 @@ def load_evaluation_data():
         'anchors': 'data/anchors.json',
         'final_performance': 'data/final_performance.json',
         
-        # New adaptive evaluation files
-        'adaptive_results': 'data/adaptive_evaluation_results.json',
-        'detailed_adaptive': 'data/detailed_adaptive_results.json',
-        'adaptive_analysis': 'data/adaptive_comprehensive_analysis.json',
-        'adaptive_base_tasks': 'data/adaptive_base_tasks.json',
+        # New adaptive evaluation files - check backend directory first
+        'detailed_adaptive': 'backend/data/detailed_adaptive_results.json',
+        'adaptive_analysis': 'backend/data/adaptive_comprehensive_analysis.json',
+        'adaptive_base_tasks': 'backend/data/adaptive_base_tasks.json',
         
         # Static evaluation results for comparison
         'static_results': 'data/static_evaluation_results.json'
     }
+    
+    # Load adaptive results from backend directory first
+    backend_adaptive_file = 'backend/data/adaptive_evaluation_results.json'
+    if os.path.exists(backend_adaptive_file):
+        try:
+            with open(backend_adaptive_file, 'r') as f:
+                data['adaptive_results'] = json.load(f)
+        except Exception as e:
+            st.warning(f"Could not load {backend_adaptive_file}: {e}")
+            data['adaptive_results'] = {}
+    else:
+        # Fallback to main data directory
+        fallback_file = 'data/adaptive_evaluation_results.json'
+        if os.path.exists(fallback_file):
+            try:
+                with open(fallback_file, 'r') as f:
+                    data['adaptive_results'] = json.load(f)
+            except Exception as e:
+                st.warning(f"Could not load {fallback_file}: {e}")
+                data['adaptive_results'] = {}
+        else:
+            data['adaptive_results'] = {}
     
     for key, filepath in files.items():
         if os.path.exists(filepath):
