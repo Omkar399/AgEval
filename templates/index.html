@@ -1,0 +1,1159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgEval - AI Agent Evaluation</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <style>
+        :root {
+            --primary: #1a1a1a;
+            --secondary: #666666;
+            --tertiary: #999999;
+            --background: #ffffff;
+            --surface: #f8f9fa;
+            --border: #e5e7eb;
+            --accent: #3b82f6;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --radius: 8px;
+            --shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--background);
+            color: var(--primary);
+            line-height: 1.6;
+            font-size: 14px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Header */
+        .header {
+            border-bottom: 1px solid var(--border);
+            background: var(--background);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 64px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--accent), #6366f1);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .logo-text {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        /* Navigation */
+        .nav {
+            display: flex;
+            gap: 4px;
+        }
+
+        .nav-item {
+            padding: 8px 16px;
+            border-radius: var(--radius);
+            color: var(--secondary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .nav-item:hover {
+            background: var(--surface);
+            color: var(--primary);
+        }
+
+        .nav-item.active {
+            background: var(--accent);
+            color: white;
+        }
+
+        /* Main Content */
+        .main {
+            padding: 32px 0;
+        }
+
+        .section {
+            margin-bottom: 48px;
+        }
+
+        .section-header {
+            margin-bottom: 24px;
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+
+        .section-subtitle {
+            color: var(--secondary);
+            font-size: 16px;
+        }
+
+        /* Cards */
+        .card {
+            background: var(--background);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            transition: all 0.2s ease;
+        }
+
+        .card:hover {
+            box-shadow: var(--shadow-lg);
+        }
+
+        .card-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border);
+            background: var(--surface);
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .card-body {
+            padding: 24px;
+        }
+
+        /* Grid */
+        .grid {
+            display: grid;
+            gap: 24px;
+        }
+
+        .grid-2 {
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        }
+
+        .grid-3 {
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        }
+
+        .grid-4 {
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        }
+
+        /* Metrics */
+        .metric {
+            text-align: center;
+        }
+
+        .metric-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 4px;
+        }
+
+        .metric-label {
+            color: var(--secondary);
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Agent Cards */
+        .agent-card {
+            padding: 20px;
+            border-radius: var(--radius);
+            background: var(--background);
+            border: 1px solid var(--border);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .agent-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--accent);
+        }
+
+        .agent-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+
+        .agent-name {
+            font-weight: 600;
+            font-size: 16px;
+            color: var(--primary);
+        }
+
+        .agent-rank {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            background: var(--surface);
+            color: var(--secondary);
+        }
+
+        .agent-rank.gold { background: #fef3cd; color: #d97706; }
+        .agent-rank.silver { background: #f3f4f6; color: #6b7280; }
+        .agent-rank.bronze { background: #fef2f2; color: #dc2626; }
+
+        .agent-score {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .agent-score.excellent { color: var(--success); }
+        .agent-score.good { color: var(--accent); }
+        .agent-score.moderate { color: var(--warning); }
+        .agent-score.poor { color: var(--danger); }
+
+        .agent-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            font-size: 13px;
+            color: var(--secondary);
+        }
+
+        /* Evaluation Progress */
+        .progress-container {
+            background: var(--surface);
+            border-radius: 6px;
+            height: 8px;
+            overflow: hidden;
+            margin-bottom: 16px;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent), #6366f1);
+            transition: width 0.3s ease;
+            border-radius: 6px;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 16px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .status-badge.waiting { background: #f3f4f6; color: #6b7280; }
+        .status-badge.running { background: #dbeafe; color: var(--accent); }
+        .status-badge.complete { background: #d1fae5; color: var(--success); }
+        .status-badge.error { background: #fee2e2; color: var(--danger); }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            border-radius: var(--radius);
+            font-weight: 500;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 14px;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #2563eb;
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: var(--surface);
+            color: var(--primary);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            background: var(--border);
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 500;
+            color: var(--primary);
+            font-size: 13px;
+        }
+
+        .input, .select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            font-size: 14px;
+            transition: border-color 0.2s ease;
+        }
+
+        .input:focus, .select:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 24px;
+        }
+
+        .tab {
+            padding: 12px 20px;
+            color: var(--secondary);
+            text-decoration: none;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .tab:hover {
+            color: var(--primary);
+        }
+
+        .tab.active {
+            color: var(--accent);
+            border-bottom-color: var(--accent);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+
+        .modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: var(--background);
+            border-radius: 12px;
+            max-width: 90vw;
+            max-height: 90vh;
+            width: 800px;
+            overflow: auto;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .modal-header {
+            padding: 24px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--secondary);
+            padding: 4px;
+        }
+
+        .modal-body {
+            padding: 24px;
+        }
+
+        /* Real-time Updates */
+        .thinking-step {
+            background: var(--surface);
+            border-left: 3px solid var(--accent);
+            padding: 16px;
+            margin-bottom: 12px;
+            border-radius: 0 var(--radius) var(--radius) 0;
+            animation: slideIn 0.3s ease;
+        }
+
+        .thinking-step-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .thinking-step-title {
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .thinking-step-time {
+            font-size: 12px;
+            color: var(--tertiary);
+        }
+
+        .thinking-step-content {
+            color: var(--secondary);
+            font-size: 13px;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 16px;
+            }
+
+            .header-content {
+                height: 56px;
+            }
+
+            .main {
+                padding: 24px 0;
+            }
+
+            .section {
+                margin-bottom: 32px;
+            }
+
+            .grid-2,
+            .grid-3,
+            .grid-4 {
+                grid-template-columns: 1fr;
+            }
+
+            .card-body {
+                padding: 20px;
+            }
+        }
+
+        /* Hide elements */
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <div class="logo-icon">A</div>
+                    <div class="logo-text">AgEval</div>
+                </div>
+                <nav class="nav">
+                    <a href="#overview" class="nav-item active" data-tab="overview">Overview</a>
+                    <a href="#evaluation" class="nav-item" data-tab="evaluation">Evaluation</a>
+                    <a href="#agents" class="nav-item" data-tab="agents">Agents</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main class="main">
+        <div class="container">
+            <!-- Overview Tab -->
+            <div id="overview" class="tab-content active">
+                <div class="section">
+                    <div class="section-header">
+                        <h1 class="section-title">AI Agent Evaluation Dashboard</h1>
+                        <p class="section-subtitle">Adaptive testing framework with real-time IRT analysis</p>
+                    </div>
+
+                    <div class="grid grid-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="metric">
+                                    <div class="metric-value" id="totalEvaluations">0</div>
+                                    <div class="metric-label">Total Evaluations</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="metric">
+                                    <div class="metric-value" id="avgTasksPerAgent">0</div>
+                                    <div class="metric-label">Avg Tasks/Agent</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="metric">
+                                    <div class="metric-value" id="convergenceRate">0%</div>
+                                    <div class="metric-label">Convergence Rate</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="metric">
+                                    <div class="metric-value" id="efficiencyGain">0%</div>
+                                    <div class="metric-label">Efficiency Gain</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">Performance Comparison</div>
+                        </div>
+                        <div class="card-body">
+                            <div id="comparisonPlot" style="height: 400px;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Evaluation Tab -->
+            <div id="evaluation" class="tab-content">
+                <div class="section">
+                    <div class="section-header">
+                        <h2 class="section-title">Real-time Evaluation</h2>
+                        <p class="section-subtitle">Run adaptive evaluations and monitor progress in real-time</p>
+                    </div>
+
+                    <div class="grid grid-2">
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="card-title">Control Panel</div>
+                            </div>
+                            <div class="card-body">
+                                <div class="form-group">
+                                    <label class="label">Evaluation Type</label>
+                                    <select class="select" id="evaluationType">
+                                        <option value="adaptive">Adaptive Evaluation</option>
+                                        <option value="static">Static Evaluation</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="label">Number of Agents</label>
+                                    <input type="number" class="input" id="numAgents" value="5" min="1" max="20">
+                                </div>
+                                <div style="display: flex; gap: 12px;">
+                                    <button class="btn btn-primary" id="runEvaluation">
+                                        <span>▶</span> Run Evaluation
+                                    </button>
+                                    <button class="btn btn-secondary" id="refreshData">
+                                        <span>↻</span> Refresh
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card" id="progressCard" style="display: none;">
+                            <div class="card-header">
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <div class="card-title">
+                                        <span id="evaluationIcon">⏳</span> Evaluation Progress
+                                    </div>
+                                    <div class="status-badge" id="stageIndicator">Waiting</div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="progress-container">
+                                    <div class="progress-bar" id="progressBar" style="width: 0%"></div>
+                                </div>
+                                <div style="margin-bottom: 16px;">
+                                    <div style="font-weight: 600; margin-bottom: 4px;" id="currentStage">Waiting to start...</div>
+                                    <div style="color: var(--secondary); font-size: 13px;" id="currentSubstage">Ready to begin evaluation</div>
+                                </div>
+
+                                <div class="grid grid-4" id="realtimeMetrics" style="display: none;">
+                                    <div class="metric">
+                                        <div class="metric-value" id="tasksCompleted">0</div>
+                                        <div class="metric-label">Tasks</div>
+                                    </div>
+                                    <div class="metric">
+                                        <div class="metric-value" id="currentAbility">0.000</div>
+                                        <div class="metric-label">Ability θ</div>
+                                    </div>
+                                    <div class="metric">
+                                        <div class="metric-value" id="currentUncertainty">±0.000</div>
+                                        <div class="metric-label">Uncertainty</div>
+                                    </div>
+                                    <div class="metric">
+                                        <div class="metric-value" id="currentDifficulty">0.000</div>
+                                        <div class="metric-label">Difficulty</div>
+                                    </div>
+                                </div>
+
+                                <div class="tabs" style="margin-top: 24px;">
+                                    <div class="tab active" data-content="thinking">Thinking</div>
+                                    <div class="tab" data-content="trajectory">Trajectory</div>
+                                    <div class="tab" data-content="logs">Logs</div>
+                                </div>
+
+                                <div id="thinking" class="tab-content active">
+                                    <div id="thinkingProcess">
+                                        <p style="color: var(--secondary); text-align: center; padding: 20px;">
+                                            Thinking process will appear here during evaluation...
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div id="trajectory" class="tab-content">
+                                    <div id="liveTrajectoryPlot" style="height: 300px;"></div>
+                                </div>
+
+                                <div id="logs" class="tab-content">
+                                    <div id="evaluationLog" style="background: var(--surface); padding: 16px; border-radius: var(--radius); font-family: monospace; font-size: 12px; max-height: 300px; overflow-y: auto;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Agents Tab -->
+            <div id="agents" class="tab-content">
+                <div class="section">
+                    <div class="section-header">
+                        <h2 class="section-title">Agent Performance</h2>
+                        <p class="section-subtitle">Detailed analysis of AI agent capabilities and rankings</p>
+                    </div>
+
+                    <div class="grid grid-3" id="agentCards">
+                        <!-- Agent cards will be populated here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Agent Modal -->
+    <div class="modal" id="agentModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title" id="agentModalTitle">Agent Details</div>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="agentModalBody">
+                <!-- Modal content will be populated here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let websocket = null;
+        let currentData = {};
+        let evaluationInterval = null;
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            initNavigation();
+            initWebSocket();
+            loadDashboardData();
+            
+            // Event handlers
+            document.getElementById('runEvaluation').addEventListener('click', runEvaluation);
+            document.getElementById('refreshData').addEventListener('click', loadDashboardData);
+        });
+
+        // Navigation
+        function initNavigation() {
+            const navItems = document.querySelectorAll('.nav-item');
+            const tabContents = document.querySelectorAll('.tab-content');
+            
+            navItems.forEach(item => {
+                item.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // Update nav
+                    navItems.forEach(nav => nav.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Update content
+                    const targetTab = this.dataset.tab;
+                    tabContents.forEach(content => content.classList.remove('active'));
+                    document.getElementById(targetTab).classList.add('active');
+                    
+                    // Load data for specific tabs
+                    if (targetTab === 'agents') {
+                        loadAgentsList();
+                    } else if (targetTab === 'overview') {
+                        loadComparisonPlot();
+                    }
+                });
+            });
+
+            // Sub-tabs
+            document.addEventListener('click', function(e) {
+                if (e.target.classList.contains('tab')) {
+                    const tabs = e.target.parentElement.querySelectorAll('.tab');
+                    const contents = e.target.parentElement.parentElement.querySelectorAll('.tab-content');
+                    
+                    tabs.forEach(tab => tab.classList.remove('active'));
+                    e.target.classList.add('active');
+                    
+                    const targetContent = e.target.dataset.content;
+                    contents.forEach(content => content.classList.remove('active'));
+                    document.getElementById(targetContent).classList.add('active');
+                }
+            });
+        }
+
+        // WebSocket
+        function initWebSocket() {
+            const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsUrl = `${protocol}//${window.location.host}/ws`;
+            
+            websocket = new WebSocket(wsUrl);
+            
+            websocket.onopen = function(event) {
+                console.log('WebSocket connected');
+            };
+            
+            websocket.onmessage = function(event) {
+                const message = JSON.parse(event.data);
+                handleWebSocketMessage(message);
+            };
+            
+            websocket.onclose = function(event) {
+                console.log('WebSocket disconnected');
+                setTimeout(initWebSocket, 3000);
+            };
+        }
+
+        function handleWebSocketMessage(message) {
+            if (message.type === 'evaluation_update') {
+                updateEvaluationProgress(message.data);
+            } else if (message.type === 'evaluation_complete') {
+                handleEvaluationComplete(message.data);
+            } else if (message.type === 'evaluation_error') {
+                handleEvaluationError(message.data);
+            }
+        }
+
+        // Data loading
+        async function loadDashboardData() {
+            try {
+                const response = await fetch('/api/data');
+                currentData = await response.json();
+                updateOverviewMetrics();
+            } catch (error) {
+                console.error('Error loading data:', error);
+            }
+        }
+
+        async function updateOverviewMetrics() {
+            try {
+                const response = await fetch('/api/adaptive/overview');
+                const overview = await response.json();
+                
+                document.getElementById('totalEvaluations').textContent = overview.total_evaluations || 0;
+                document.getElementById('avgTasksPerAgent').textContent = Math.round(overview.average_tasks_per_agent || 0);
+                document.getElementById('convergenceRate').textContent = Math.round(overview.convergence_rate || 0) + '%';
+                document.getElementById('efficiencyGain').textContent = Math.round(overview.efficiency_gain || 0) + '%';
+            } catch (error) {
+                console.error('Error updating metrics:', error);
+            }
+        }
+
+        async function loadComparisonPlot() {
+            try {
+                const response = await fetch('/api/plots/comparison');
+                const plotData = await response.json();
+                Plotly.newPlot('comparisonPlot', JSON.parse(plotData));
+            } catch (error) {
+                console.error('Error loading comparison plot:', error);
+            }
+        }
+
+        async function loadAgentsList() {
+            try {
+                const response = await fetch('/api/agents/list');
+                const data = await response.json();
+                loadAgentCards(data.agents);
+            } catch (error) {
+                console.error('Error loading agents:', error);
+            }
+        }
+
+        async function loadAgentCards(agents) {
+            const container = document.getElementById('agentCards');
+            container.innerHTML = '';
+            
+            // Get performance data for each agent
+            const agentPerformanceData = {};
+            for (const agent of agents.slice(0, 12)) {
+                try {
+                    const response = await fetch(`/api/agents/${agent}/performance`);
+                    if (response.ok) {
+                        agentPerformanceData[agent] = await response.json();
+                    }
+                } catch (error) {
+                    console.error(`Error loading performance for ${agent}:`, error);
+                }
+            }
+            
+            // Sort agents by performance
+            const sortedAgents = agents.slice(0, 12).sort((a, b) => {
+                const perfA = agentPerformanceData[a]?.static_performance?.overall_score || 0;
+                const perfB = agentPerformanceData[b]?.static_performance?.overall_score || 0;
+                return perfB - perfA;
+            });
+            
+            sortedAgents.forEach((agent, index) => {
+                const perfData = agentPerformanceData[agent];
+                const avgPerformance = perfData?.static_performance?.overall_score || 0;
+                const adaptiveAbility = perfData?.adaptive_performance?.final_ability || 0;
+                const tasksCompleted = perfData?.adaptive_performance?.tasks_completed || 0;
+                const converged = perfData?.adaptive_performance?.converged || false;
+                
+                // Determine performance class
+                let scoreClass = 'poor';
+                if (avgPerformance >= 0.8) scoreClass = 'excellent';
+                else if (avgPerformance >= 0.6) scoreClass = 'good';
+                else if (avgPerformance >= 0.4) scoreClass = 'moderate';
+                
+                // Determine rank class
+                let rankClass = '';
+                let rankText = `#${index + 1}`;
+                if (index === 0) { rankClass = 'gold'; rankText = '🥇 #1'; }
+                else if (index === 1) { rankClass = 'silver'; rankText = '🥈 #2'; }
+                else if (index === 2) { rankClass = 'bronze'; rankText = '🥉 #3'; }
+                
+                const card = document.createElement('div');
+                card.className = 'agent-card';
+                card.onclick = () => showAgentDetails(agent);
+                card.innerHTML = `
+                    <div class="agent-header">
+                        <div class="agent-name">${agent}</div>
+                        <div class="agent-rank ${rankClass}">${rankText}</div>
+                    </div>
+                    <div class="agent-score ${scoreClass}">${avgPerformance.toFixed(3)}</div>
+                    <div class="agent-details">
+                        <div>Adaptive θ: ${adaptiveAbility.toFixed(3)}</div>
+                        <div>Tasks: ${tasksCompleted || 'N/A'}</div>
+                        <div>Status: ${converged ? '✅ Converged' : '⏳ In Progress'}</div>
+                        <div>Efficiency: ${perfData?.comparison_metrics?.efficiency_gain?.toFixed(1) || 0}%</div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // Evaluation functions
+        async function runEvaluation() {
+            const evaluationType = document.getElementById('evaluationType').value;
+            const numAgents = document.getElementById('numAgents').value;
+            
+            try {
+                const response = await fetch('/api/evaluation/run', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        type: evaluationType,
+                        num_agents: parseInt(numAgents)
+                    })
+                });
+                
+                if (response.ok) {
+                    document.getElementById('progressCard').style.display = 'block';
+                    document.getElementById('runEvaluation').disabled = true;
+                    
+                    // Clear previous data
+                    document.getElementById('thinkingProcess').innerHTML = '<p style="color: var(--secondary); text-align: center; padding: 20px;">Starting evaluation...</p>';
+                    document.getElementById('evaluationLog').innerHTML = '';
+                    document.getElementById('realtimeMetrics').style.display = 'none';
+                    
+                    // Initialize live trajectory plot
+                    Plotly.newPlot('liveTrajectoryPlot', [], {
+                        xaxis: { title: 'Evaluation Step' },
+                        yaxis: { title: 'Ability / Difficulty' },
+                        height: 300,
+                        margin: { t: 20, b: 40, l: 50, r: 20 }
+                    });
+                } else {
+                    const error = await response.json();
+                    alert('Error: ' + (error.detail || 'Failed to start evaluation'));
+                }
+            } catch (error) {
+                console.error('Error starting evaluation:', error);
+                alert('Error starting evaluation');
+            }
+        }
+
+        function updateEvaluationProgress(data) {
+            // Update progress bar
+            document.getElementById('progressBar').style.width = data.progress + '%';
+            
+            // Update stage indicators
+            document.getElementById('currentStage').textContent = data.stage || 'Unknown';
+            document.getElementById('currentSubstage').textContent = data.substage || '';
+            
+            const stageIndicator = document.getElementById('stageIndicator');
+            stageIndicator.textContent = data.stage || 'Running';
+            stageIndicator.className = 'status-badge ' + (data.stage || 'waiting');
+            
+            // Update real-time metrics
+            if (data.stage === 'evaluating' || data.tasks_completed > 0) {
+                document.getElementById('realtimeMetrics').style.display = 'grid';
+                document.getElementById('tasksCompleted').textContent = data.tasks_completed || 0;
+                document.getElementById('currentAbility').textContent = (data.current_ability || 0).toFixed(3);
+                document.getElementById('currentUncertainty').textContent = '±' + (data.current_uncertainty || 0).toFixed(3);
+                document.getElementById('currentDifficulty').textContent = (data.current_difficulty || 0).toFixed(3);
+            }
+            
+            // Update thinking process
+            updateThinkingProcess(data.thinking_process || []);
+            
+            // Update live trajectory
+            updateLiveTrajectory(data.agent_trajectory || []);
+            
+            // Update logs
+            updateLogs(data.detailed_logs || []);
+            
+            // Update icons
+            const icons = {
+                'waiting': '⏳', 'initializing': '🚀', 'evaluating': '🧠', 
+                'analyzing': '📊', 'complete': '✅', 'error': '❌'
+            };
+            document.getElementById('evaluationIcon').textContent = icons[data.stage] || '⏳';
+        }
+
+        function updateThinkingProcess(thinkingSteps) {
+            const container = document.getElementById('thinkingProcess');
+            
+            if (thinkingSteps.length === 1) {
+                container.innerHTML = '';
+            }
+            
+            thinkingSteps.slice(-5).forEach(step => {
+                const existingStep = container.querySelector(`[data-timestamp="${step.timestamp}"]`);
+                if (!existingStep) {
+                    const stepElement = document.createElement('div');
+                    stepElement.className = 'thinking-step';
+                    stepElement.dataset.timestamp = step.timestamp;
+                    stepElement.innerHTML = `
+                        <div class="thinking-step-header">
+                            <div class="thinking-step-title">${step.step}</div>
+                            <div class="thinking-step-time">${new Date(step.timestamp).toLocaleTimeString()}</div>
+                        </div>
+                        <div class="thinking-step-content">${step.details}</div>
+                    `;
+                    container.appendChild(stepElement);
+                    container.scrollTop = container.scrollHeight;
+                }
+            });
+        }
+
+        function updateLiveTrajectory(trajectory) {
+            if (trajectory.length === 0) return;
+            
+            const steps = trajectory.map(t => t.step);
+            const abilities = trajectory.map(t => t.ability);
+            const difficulties = trajectory.map(t => t.difficulty);
+            
+            const trace1 = {
+                x: steps, y: abilities, type: 'scatter', mode: 'lines+markers',
+                name: 'Ability Estimate', line: { color: '#3b82f6', width: 3 }
+            };
+            
+            const trace2 = {
+                x: steps, y: difficulties, type: 'scatter', mode: 'markers',
+                name: 'Task Difficulty', marker: { color: '#f59e0b', size: 8 }
+            };
+            
+            Plotly.newPlot('liveTrajectoryPlot', [trace1, trace2], {
+                xaxis: { title: 'Evaluation Step' },
+                yaxis: { title: 'Ability / Difficulty' },
+                height: 300,
+                margin: { t: 20, b: 40, l: 50, r: 20 }
+            });
+        }
+
+        function updateLogs(logs) {
+            const container = document.getElementById('evaluationLog');
+            container.innerHTML = '';
+            
+            logs.slice(-20).forEach(log => {
+                const logElement = document.createElement('div');
+                logElement.style.marginBottom = '4px';
+                logElement.innerHTML = `
+                    <span style="color: var(--tertiary);">${new Date(log.timestamp).toLocaleTimeString()}</span>
+                    <span style="margin-left: 8px;">[${log.level}]</span>
+                    <span style="margin-left: 8px;">${log.message}</span>
+                `;
+                container.appendChild(logElement);
+            });
+            
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function handleEvaluationComplete(data) {
+            document.getElementById('runEvaluation').disabled = false;
+            alert('Evaluation completed successfully!');
+            setTimeout(loadDashboardData, 2000);
+        }
+
+        function handleEvaluationError(data) {
+            document.getElementById('runEvaluation').disabled = false;
+            alert('Evaluation failed: ' + data.substage);
+        }
+
+        // Modal functions
+        async function showAgentDetails(agentId) {
+            try {
+                const response = await fetch(`/api/agents/${agentId}/performance`);
+                const performance = await response.json();
+                
+                document.getElementById('agentModalTitle').textContent = agentId;
+                
+                const adaptivePerf = performance.adaptive_performance;
+                const staticPerf = performance.static_performance;
+                const compMetrics = performance.comparison_metrics;
+                
+                document.getElementById('agentModalBody').innerHTML = `
+                    <div class="grid grid-3" style="margin-bottom: 24px;">
+                        <div class="metric">
+                            <div class="metric-value">${staticPerf.overall_score?.toFixed(3) || 'N/A'}</div>
+                            <div class="metric-label">Overall Score</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-value">${adaptivePerf.final_ability?.toFixed(3) || 'N/A'}</div>
+                            <div class="metric-label">Adaptive θ</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-value">${compMetrics.efficiency_gain?.toFixed(1) || 0}%</div>
+                            <div class="metric-label">Efficiency Gain</div>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-2">
+                        <div>
+                            <h4 style="margin-bottom: 16px;">Static Evaluation</h4>
+                            <div style="background: var(--surface); padding: 16px; border-radius: var(--radius);">
+                                <div style="margin-bottom: 8px;"><strong>Score:</strong> ${staticPerf.overall_score?.toFixed(3) || 'N/A'}</div>
+                                <div style="margin-bottom: 8px;"><strong>Tasks:</strong> ${staticPerf.total_tasks || 0}</div>
+                                <div><strong>Success Rate:</strong> ${((staticPerf.overall_score || 0) * 100).toFixed(1)}%</div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <h4 style="margin-bottom: 16px;">Adaptive Analysis</h4>
+                            <div style="background: var(--surface); padding: 16px; border-radius: var(--radius);">
+                                <div style="margin-bottom: 8px;"><strong>Ability θ:</strong> ${adaptivePerf.final_ability?.toFixed(3) || 'N/A'}</div>
+                                <div style="margin-bottom: 8px;"><strong>Tasks:</strong> ${adaptivePerf.tasks_completed || 0}</div>
+                                <div><strong>Converged:</strong> ${adaptivePerf.converged ? '✅ Yes' : '⏳ No'}</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                document.getElementById('agentModal').classList.add('show');
+            } catch (error) {
+                console.error('Error loading agent details:', error);
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('agentModal').classList.remove('show');
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('agentModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>
