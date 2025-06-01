@@ -433,83 +433,81 @@ class DynamicTaskGenerator:
                                 base_prompt: str, 
                                 level: DifficultyLevel, 
                                 domain: TaskDomain) -> str:
-        """Apply sophisticated domain-specific difficulty scaling to prompt."""
+        """Apply judge-based difficulty scaling to prompt."""
         
-        if domain == TaskDomain.MATHEMATICAL:
-            return self._scale_mathematical_difficulty(base_prompt, level)
-        elif domain == TaskDomain.LOGICAL:
-            return self._scale_logical_difficulty(base_prompt, level)
-        elif domain == TaskDomain.CREATIVE:
-            return self._scale_creative_difficulty(base_prompt, level)
-        elif domain == TaskDomain.TECHNICAL:
-            return self._scale_technical_difficulty(base_prompt, level)
-        else:  # ANALYTICAL
-            return self._scale_analytical_difficulty(base_prompt, level)
+        # Map difficulty levels to descriptive terms
+        difficulty_descriptions = {
+            DifficultyLevel.VERY_EASY: "much easier",
+            DifficultyLevel.EASY: "easier", 
+            DifficultyLevel.MEDIUM: "similar difficulty",
+            DifficultyLevel.HARD: "harder",
+            DifficultyLevel.VERY_HARD: "much harder"
+        }
+        
+        if level == DifficultyLevel.MEDIUM:
+            # For medium difficulty, just return the base prompt
+            return base_prompt
+        
+        difficulty_desc = difficulty_descriptions[level]
+        
+        # Create a judge prompt to modify the task difficulty
+        judge_prompt = f"""You are a task difficulty expert. Given this task:
+
+"{base_prompt}"
+
+Create a {difficulty_desc} version of the same fundamental task. Keep the core objective the same, but adjust the complexity, constraints, or requirements to make it {difficulty_desc}.
+
+Guidelines:
+- For easier tasks: Simplify requirements, reduce constraints, provide more guidance
+- For harder tasks: Add complexity, multiple constraints, require deeper analysis, or increase scope
+- Maintain the same general domain and task type
+- Make the difficulty change feel natural and appropriate
+
+Return only the modified task prompt, nothing else."""
+
+        # In a real implementation, you would call your judge system here
+        # For now, we'll use a simplified approach
+        return self._simulate_judge_response(base_prompt, level, judge_prompt)
     
-    def _scale_mathematical_difficulty(self, base_prompt: str, level: DifficultyLevel) -> str:
-        """Scale mathematical task difficulty with sophisticated transformations."""
-        if level == DifficultyLevel.VERY_EASY:
-            return f"Solve this step-by-step with clear arithmetic: {base_prompt}"
-        elif level == DifficultyLevel.EASY:
-            return f"Show your work for: {base_prompt} Then verify your answer."
-        elif level == DifficultyLevel.MEDIUM:
-            return f"Solve: {base_prompt} Explain each step and identify potential error sources."
-        elif level == DifficultyLevel.HARD:
-            return f"Given: {base_prompt} Provide multiple solution approaches and compare their efficiency. Show mathematical reasoning."
-        else:  # VERY_HARD
-            return f"Mathematical Challenge: {base_prompt} Develop a general formula/algorithm, prove correctness, analyze complexity, and provide edge case handling."
-
-    def _scale_logical_difficulty(self, base_prompt: str, level: DifficultyLevel) -> str:
-        """Scale logical reasoning task difficulty with sophisticated transformations."""
-        if level == DifficultyLevel.VERY_EASY:
-            return f"Using basic logic: {base_prompt} State your conclusion clearly."
-        elif level == DifficultyLevel.EASY:
-            return f"Apply logical reasoning: {base_prompt} Show the logical steps you used."
-        elif level == DifficultyLevel.MEDIUM:
-            return f"Logical analysis required: {base_prompt} Identify assumptions, apply formal reasoning, and evaluate alternative conclusions."
-        elif level == DifficultyLevel.HARD:
-            return f"Complex logical challenge: {base_prompt} Construct formal proofs, identify logical fallacies, examine counterarguments, and provide rigorous justification."
-        else:  # VERY_HARD
-            return f"Advanced logical framework: {base_prompt} Develop a meta-logical analysis, identify underlying philosophical assumptions, construct modal logic interpretations, and examine the logical structure's implications across different logical systems."
-
-    def _scale_creative_difficulty(self, base_prompt: str, level: DifficultyLevel) -> str:
-        """Scale creative task difficulty with sophisticated transformations."""
-        if level == DifficultyLevel.VERY_EASY:
-            return f"Creative task: {base_prompt} Focus on generating ideas."
-        elif level == DifficultyLevel.EASY:
-            return f"Creative challenge: {base_prompt} Generate multiple options and explain your favorite."
-        elif level == DifficultyLevel.MEDIUM:
-            return f"Creative problem-solving: {base_prompt} Consider constraints, generate diverse solutions, and evaluate trade-offs."
-        elif level == DifficultyLevel.HARD:
-            return f"Advanced creative challenge: {base_prompt} Incorporate multiple conflicting requirements, consider stakeholder perspectives, and design iterative improvement processes."
-        else:  # VERY_HARD
-            return f"Expert-level creative synthesis: {base_prompt} Integrate cross-disciplinary insights, address paradoxical requirements, develop novel theoretical frameworks, and create transformative solutions that challenge conventional assumptions."
-
-    def _scale_technical_difficulty(self, base_prompt: str, level: DifficultyLevel) -> str:
-        """Scale technical task difficulty with sophisticated transformations."""
-        if level == DifficultyLevel.VERY_EASY:
-            return f"Basic technical task: {base_prompt} Provide a simple implementation."
-        elif level == DifficultyLevel.EASY:
-            return f"Technical implementation: {base_prompt} Include error handling and basic documentation."
-        elif level == DifficultyLevel.MEDIUM:
-            return f"Technical design challenge: {base_prompt} Consider scalability, maintainability, and performance. Provide architectural overview."
-        elif level == DifficultyLevel.HARD:
-            return f"Complex technical system: {base_prompt} Design for high availability, security, monitoring, and extensibility. Include testing strategy and deployment considerations."
-        else:  # VERY_HARD
-            return f"Enterprise-grade technical architecture: {base_prompt} Design a distributed, fault-tolerant system with microservices architecture, event-driven communication, comprehensive observability, security hardening, disaster recovery, and auto-scaling capabilities. Include cost optimization and compliance considerations."
-
-    def _scale_analytical_difficulty(self, base_prompt: str, level: DifficultyLevel) -> str:
-        """Scale analytical task difficulty with sophisticated transformations."""
-        if level == DifficultyLevel.VERY_EASY:
-            return f"Basic analysis: {base_prompt} Identify key points."
-        elif level == DifficultyLevel.EASY:
-            return f"Analytical task: {base_prompt} Compare and contrast main elements."
-        elif level == DifficultyLevel.MEDIUM:
-            return f"Comprehensive analysis: {base_prompt} Examine multiple perspectives, identify patterns, and draw evidence-based conclusions."
-        elif level == DifficultyLevel.HARD:
-            return f"Deep analytical investigation: {base_prompt} Conduct systematic analysis using multiple frameworks, identify hidden assumptions, examine causal relationships, and synthesize insights across domains."
-        else:  # VERY_HARD
-            return f"Meta-analytical framework: {base_prompt} Develop original analytical methodology, examine paradigmatic assumptions, integrate interdisciplinary perspectives, identify emergent patterns, and construct predictive models while addressing epistemological limitations."
+    def _simulate_judge_response(self, base_prompt: str, level: DifficultyLevel, judge_prompt: str) -> str:
+        """
+        Simulate judge response for difficulty scaling.
+        In production, this would call your actual judge system.
+        """
+        # This is a simplified simulation - in production you'd call your judge
+        
+        if "plan" in base_prompt.lower() and "itinerary" in base_prompt.lower():
+            # Travel planning example
+            if level == DifficultyLevel.VERY_EASY:
+                return f"Plan a simple 1-day visit to San Francisco. List 2-3 main attractions and suggest lunch. Keep it basic."
+            elif level == DifficultyLevel.EASY:
+                return f"Plan a 2-day itinerary for visiting San Francisco. Include 3-4 attractions per day and meal suggestions."
+            elif level == DifficultyLevel.HARD:
+                return f"Plan a comprehensive 3-day San Francisco itinerary for a family with different age groups. Include attractions, restaurants, transportation, budget breakdown, backup plans for weather, and accessibility considerations."
+            elif level == DifficultyLevel.VERY_HARD:
+                return f"Design a detailed 3-day San Francisco itinerary optimizing for budget, time, and group preferences. Include real-time transportation options, reservation requirements, seasonal considerations, alternative routes, cost-benefit analysis of different approaches, and contingency plans for various scenarios."
+        
+        elif any(op in base_prompt.lower() for op in ['compute', 'calculate', '+', '×', 'multiply']):
+            # Math example  
+            if level == DifficultyLevel.VERY_EASY:
+                return f"Solve: {base_prompt} Show your work."
+            elif level == DifficultyLevel.EASY:
+                return f"Calculate: {base_prompt} Show each step and verify your answer."
+            elif level == DifficultyLevel.HARD:
+                return f"Solve: {base_prompt} Show multiple solution methods, identify the most efficient approach, and explain why."
+            elif level == DifficultyLevel.VERY_HARD:
+                return f"Mathematical problem: {base_prompt} Solve using at least two different methods, analyze computational complexity, identify underlying mathematical principles, and create a general algorithm for similar problems."
+        
+        else:
+            # Generic scaling
+            complexity_modifiers = {
+                DifficultyLevel.VERY_EASY: f"Simple version: {base_prompt} Keep your response straightforward.",
+                DifficultyLevel.EASY: f"Basic task: {base_prompt} Provide clear reasoning for your approach.",
+                DifficultyLevel.HARD: f"Complex challenge: {base_prompt} Consider multiple perspectives, analyze trade-offs, and provide detailed justification for your approach.",
+                DifficultyLevel.VERY_HARD: f"Advanced analysis: {base_prompt} Provide comprehensive analysis, consider edge cases, examine underlying assumptions, and develop systematic frameworks for evaluation."
+            }
+            
+            return complexity_modifiers.get(level, base_prompt)
     
     def _estimate_tokens(self, level: DifficultyLevel) -> int:
         """Estimate expected response tokens based on difficulty."""
