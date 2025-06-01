@@ -11,6 +11,7 @@ A modern, real-time dashboard for evaluating AI agents using adaptive Item Respo
 - **📈 Live Visualizations**: Interactive charts and trajectory plots
 - **⚡ WebSocket Updates**: Instant progress streaming
 - **🎨 Modern UI**: Clean, minimalistic Anthropic-style interface
+- **🧠 Hard Thinking**: Multi-LLM ensemble system for complex reasoning tasks
 
 ## 🚀 Quick Start
 
@@ -64,6 +65,7 @@ Navigate to: **http://localhost:8001**
 - **Overview**: High-level metrics and comparison charts
 - **Evaluation**: Real-time evaluation monitoring
 - **Agents**: Detailed agent performance cards and analysis
+- **Hard Thinking**: Multi-LLM ensemble reasoning for complex problems
 
 ### Command-line Evaluation
 ```bash
@@ -109,6 +111,12 @@ AgEval/
 - **Comprehensive**: 9-phase evaluation pipeline
 - **Reliable**: Inter-judge agreement analysis
 
+### 3. Hard Thinking Multi-LLM Ensemble
+- **Task Decomposition**: Smart problem breakdown by complexity
+- **Parallel Processing**: GPT-4, Claude, and Gemini work simultaneously
+- **Response Scoring**: Confidence, consistency, and learned weights
+- **Intelligent Synthesis**: Best-of-breed response selection and integration
+
 ## 🎯 Task Suite
 
 ### Atomic Tasks (3)
@@ -145,6 +153,7 @@ uvicorn fastapi_app:app --reload --port 8001
 ```bash
 python test_adaptive_evaluation.py
 python tests/test_basic.py
+python test_hard_thinking.py  # Test multi-LLM ensemble
 ```
 
 ## 📊 Data Files

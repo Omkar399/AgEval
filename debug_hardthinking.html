@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Hard Thinking Debug Test</title>
+</head>
+<body>
+    <h1>Hard Thinking API Test</h1>
+    <button onclick="testHardThinking()">Test API</button>
+    <div id="result"></div>
+
+    <script>
+        async function testHardThinking() {
+            const result = document.getElementById('result');
+            result.innerHTML = 'Testing...';
+            
+            try {
+                const response = await fetch('/api/hardthinking/run', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        query: 'What is 2 + 2?',
+                        problem_type: 'math',
+                        complexity: 'simple',
+                        strategy: 'voting'
+                    })
+                });
+                
+                console.log('Response status:', response.status);
+                const data = await response.json();
+                console.log('Response data:', data);
+                
+                result.innerHTML = `
+                    <h2>API Response:</h2>
+                    <pre>${JSON.stringify(data, null, 2)}</pre>
+                `;
+                
+            } catch (error) {
+                console.error('Error:', error);
+                result.innerHTML = `Error: ${error.message}`;
+            }
+        }
+    </script>
+</body>
+</html>

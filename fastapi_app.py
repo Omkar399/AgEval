@@ -737,6 +737,85 @@ async def get_comparison_plot():
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+@app.post("/api/hardthinking/run")
+async def run_hard_thinking(request: Request):
+    """Run hard thinking multi-LLM ensemble"""
+    try:
+        body = await request.json()
+        query = body.get("query", "")
+        problem_type = body.get("problem_type", "general")
+        complexity = body.get("complexity", "moderate")
+        strategy = body.get("strategy", "weighted")
+        
+        if not query.strip():
+            raise HTTPException(status_code=400, detail="Query cannot be empty")
+        
+        # Initialize Hard Thinking system with mock API keys
+        # In production, these would come from environment variables or config
+        api_keys = {
+            "openai": "demo_key",  # Mock for demo
+            "anthropic": "demo_key",  # Mock for demo
+            "google": "demo_key"  # Mock for demo
+        }
+        
+        # Convert string parameters to enums
+        try:
+            from src.hard_thinking import HarderThinkingSystem, TaskComplexity, EnsembleStrategy
+            
+            complexity_enum = TaskComplexity(complexity)
+            strategy_enum = EnsembleStrategy(strategy)
+            
+            # Run the hard thinking process
+            hard_thinking = HarderThinkingSystem(api_keys)
+            result = await hard_thinking.process_query(
+                query=query,
+                problem_type=problem_type,
+                complexity=complexity_enum,
+                strategy=strategy_enum
+            )
+            
+            # Convert result to dict for JSON response
+            result_dict = {
+                "query": result.query,
+                "best_model": result.best_model,
+                "final_answer": result.final_answer,
+                "confidence_score": result.confidence_score,
+                "consensus_level": result.consensus_level,
+                "processing_time": result.processing_time,
+                "total_tokens": result.total_tokens,
+                "model_breakdown": result.model_breakdown,
+                "decomposition": [
+                    {
+                        "id": subtask.id,
+                        "task": subtask.task,
+                        "complexity": subtask.complexity.value
+                    } for subtask in result.decomposition
+                ],
+                "strategy_used": result.strategy_used.value
+            }
+            
+            return JSONResponse(content={
+                "status": "completed",
+                "message": "Hard thinking process completed successfully",
+                "result": result_dict
+            })
+            
+        except ImportError as e:
+            # Fallback to simulation if import fails
+            return JSONResponse(content={
+                "status": "started",
+                "message": "Hard thinking process initiated (simulation mode)",
+                "query": query,
+                "config": {
+                    "problem_type": problem_type,
+                    "complexity": complexity,
+                    "strategy": strategy
+                }
+            })
+            
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8001)
