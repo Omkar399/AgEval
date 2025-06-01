@@ -1,0 +1,23 @@
+{
+  "JudgeA": {
+    "Completeness": 0.0,
+    "Reasoning Clarity": 0.0,
+    "Technical Precision": 0.0,
+    "Response Accuracy": 0.0,
+    "Relevance": 0.0
+  },
+  "JudgeB": {
+    "Completeness": 0.0,
+    "Reasoning Clarity": 0.0,
+    "Technical Precision": 0.0,
+    "Response Accuracy": 0.0,
+    "Relevance": 0.0
+  },
+  "JudgeC": {
+    "Completeness": 0.0,
+    "Reasoning Clarity": 0.0,
+    "Technical Precision": 0.0,
+    "Response Accuracy": 0.0,
+    "Relevance": 0.0
+  }
+}

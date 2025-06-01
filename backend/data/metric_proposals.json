@@ -1,0 +1,83 @@
+{
+  "JudgeA": [
+    {
+      "name": "Response Accuracy",
+      "definition": "Confidence in the factual correctness and logical soundness of the agent's response, considering accuracy of information, calculations, and reasoning.",
+      "scale": "Confidence [0.0-1.0]"
+    },
+    {
+      "name": "Completeness",
+      "definition": "Confidence in the thoroughness of the response, assessing whether all aspects of the task requirements are addressed and no critical information is omitted.",
+      "scale": "Confidence [0.0-1.0]"
+    },
+    {
+      "name": "Relevance",
+      "definition": "Confidence in the relevance of the response to the specific task prompt, evaluating how well the content aligns with the task requirements and objectives.",
+      "scale": "Confidence [0.0-1.0]"
+    },
+    {
+      "name": "Clarity and Coherence",
+      "definition": "Confidence in the clarity and logical flow of the explanation provided, assessing whether the response is easy to understand and follows a coherent structure.",
+      "scale": "Confidence [0.0-1.0]"
+    },
+    {
+      "name": "Technical Correctness",
+      "definition": "Confidence in the technical accuracy of the response, particularly for tasks involving complex calculations, algorithms, or system designs, ensuring that all technical details are correct.",
+      "scale": "Confidence [0.0-1.0]"
+    }
+  ],
+  "JudgeB": [
+    {
+      "name": "Technical Precision",
+      "definition": "Confidence in the mathematical, algorithmic, and technical accuracy of specific claims and solutions, including correctness of formulas, code logic, and system specifications.",
+      "scale": "Confidence [0.0-1.0]"
+    },
+    {
+      "name": "Solution Completeness",
+      "definition": "Confidence that the response addresses all aspects of the task requirements and constraints, with appropriate depth for each component and consideration of edge cases.",
+      "scale": "Confidence [0.0-1.0]"
+    },
+    {
+      "name": "Reasoning Clarity",
+      "definition": "Confidence in how well the response explains its approach, assumptions, and trade-offs, with clear logical flow and appropriate justification of key decisions.",
+      "scale": "Confidence [0.0-1.0]"
+    },
+    {
+      "name": "Implementation Feasibility",
+      "definition": "Confidence in the practicality and viability of the proposed solution, considering real-world constraints, scalability issues, and technical limitations.",
+      "scale": "Confidence [0.0-1.0]"
+    },
+    {
+      "name": "Error Handling",
+      "definition": "Confidence in how thoroughly the response addresses potential failure modes, edge cases, and error conditions, including appropriate mitigation strategies.",
+      "scale": "Confidence [0.0-1.0]"
+    }
+  ],
+  "JudgeC": [
+    {
+      "name": "Response Accuracy",
+      "definition": "Confidence in the factual correctness and logical soundness of the agent's response, considering accuracy of information, calculations, and reasoning.",
+      "scale": "Confidence [0.0-1.0]"
+    },
+    {
+      "name": "Completeness",
+      "definition": "Confidence that the response addresses all aspects of the prompt's requirements, including all sub-tasks and considerations.  A higher confidence indicates a more thorough and comprehensive answer.",
+      "scale": "Confidence [0.0-1.0]"
+    },
+    {
+      "name": "Relevance",
+      "definition": "Confidence that the response directly addresses the prompt's core question(s) and avoids irrelevant information or tangents.  Higher confidence indicates a more focused and pertinent answer.",
+      "scale": "Confidence [0.0-1.0]"
+    },
+    {
+      "name": "Clarity & Coherence",
+      "definition": "Confidence in the clarity, organization, and logical flow of the response.  A higher confidence score reflects a well-structured and easily understandable explanation.",
+      "scale": "Confidence [0.0-1.0]"
+    },
+    {
+      "name": "Technical Correctness",
+      "definition": "Confidence in the correctness of any code, algorithms, or technical details presented in the response.  This includes syntax, logic, and adherence to best practices.",
+      "scale": "Confidence [0.0-1.0]"
+    }
+  ]
+}

@@ -1,0 +1,113 @@
+{
+  "JudgeA": {
+    "anchor_arithmetic": {
+      "Completeness": 1.0,
+      "Reasoning Clarity": 1.0,
+      "Technical Precision": 1.0,
+      "Response Accuracy": 1.0,
+      "Relevance": 1.0
+    },
+    "anchor_json": {
+      "Completeness": 0.8,
+      "Reasoning Clarity": 0.9,
+      "Technical Precision": 1.0,
+      "Response Accuracy": 1.0,
+      "Relevance": 1.0
+    },
+    "anchor_reasoning": {
+      "Completeness": 1.0,
+      "Reasoning Clarity": 1.0,
+      "Technical Precision": 1.0,
+      "Response Accuracy": 1.0,
+      "Relevance": 1.0
+    },
+    "anchor_message": {
+      "Completeness": 1.0,
+      "Reasoning Clarity": 1.0,
+      "Technical Precision": 1.0,
+      "Response Accuracy": 1.0,
+      "Relevance": 1.0
+    },
+    "anchor_api_plan": {
+      "Completeness": 1.0,
+      "Reasoning Clarity": 1.0,
+      "Technical Precision": 1.0,
+      "Response Accuracy": 1.0,
+      "Relevance": 1.0
+    }
+  },
+  "JudgeB": {
+    "anchor_arithmetic": {
+      "Completeness": 1.0,
+      "Reasoning Clarity": 0.0,
+      "Technical Precision": 0.0,
+      "Response Accuracy": 0.0,
+      "Relevance": 1.0
+    },
+    "anchor_json": {
+      "Completeness": 0.9,
+      "Reasoning Clarity": 0.0,
+      "Technical Precision": 0.0,
+      "Response Accuracy": 0.0,
+      "Relevance": 1.0
+    },
+    "anchor_reasoning": {
+      "Completeness": 0.9,
+      "Reasoning Clarity": 0.0,
+      "Technical Precision": 0.0,
+      "Response Accuracy": 0.0,
+      "Relevance": 1.0
+    },
+    "anchor_message": {
+      "Completeness": 0.9,
+      "Reasoning Clarity": 0.0,
+      "Technical Precision": 0.0,
+      "Response Accuracy": 0.0,
+      "Relevance": 1.0
+    },
+    "anchor_api_plan": {
+      "Completeness": 1.0,
+      "Reasoning Clarity": 0.0,
+      "Technical Precision": 0.0,
+      "Response Accuracy": 0.0,
+      "Relevance": 0.9
+    }
+  },
+  "JudgeC": {
+    "anchor_arithmetic": {
+      "Completeness": 1.0,
+      "Reasoning Clarity": 1.0,
+      "Technical Precision": 1.0,
+      "Response Accuracy": 1.0,
+      "Relevance": 1.0
+    },
+    "anchor_json": {
+      "Completeness": 1.0,
+      "Reasoning Clarity": 0.6,
+      "Technical Precision": 1.0,
+      "Response Accuracy": 1.0,
+      "Relevance": 1.0
+    },
+    "anchor_reasoning": {
+      "Completeness": 1.0,
+      "Reasoning Clarity": 1.0,
+      "Technical Precision": 1.0,
+      "Response Accuracy": 1.0,
+      "Relevance": 1.0
+    },
+    "anchor_message": {
+      "Completeness": 1.0,
+      "Reasoning Clarity": 0.8,
+      "Technical Precision": 0.8,
+      "Response Accuracy": 1.0,
+      "Relevance": 1.0
+    },
+    "anchor_api_plan": {
+      "Completeness": 1.0,
+      "Reasoning Clarity": 0.9,
+      "Technical Precision": 0.9,
+      "Response Accuracy": 0.9,
+      "Relevance": 1.0
+    }
+  }
+}

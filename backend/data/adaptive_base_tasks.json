@@ -1,0 +1,65 @@
+[
+  {
+    "id": "atomic_1",
+    "prompt": "A recursive function f(n) is defined as: f(1) = 2, f(n) = 3*f(n-1) + (-1)^n for n > 1. Calculate f(6) and explain your reasoning step by step. Also determine if there's a pattern in the sequence.",
+    "domain": "analytical",
+    "complexity": "medium",
+    "expected_response_length": 200
+  },
+  {
+    "id": "atomic_2",
+    "prompt": "Given this malformed JSON: {\"users\": [{\"name\": \"Alice\", \"data\": {\"age\": 25, \"city\": \"NYC\", \"nested\": {\"score\": \"invalid_number\"}}, \"name\": \"Bob\", \"age\": \"thirty\"}]} - Parse it, identify all errors, fix them, and extract the average age of valid users.",
+    "domain": "analytical",
+    "complexity": "medium",
+    "expected_response_length": 200
+  },
+  {
+    "id": "atomic_3",
+    "prompt": "A cylindrical water tank (radius 3m, height 8m) has a conical leak at the bottom (cone height 0.5m, radius 0.2m). If water flows out at 0.1 m\u00b3/min and flows in at 0.15 m\u00b3/min, when will the tank be exactly half full? Consider the complex geometry when water level drops below the cone.",
+    "domain": "analytical",
+    "complexity": "medium",
+    "expected_response_length": 200
+  },
+  {
+    "id": "compositional_1",
+    "prompt": "Build a rate-limited API client that: 1) Fetches weather data for 50 cities simultaneously, 2) Implements exponential backoff for failures, 3) Handles rate limits (max 10 requests/minute), 4) Aggregates data to find cities with 'unusual' weather (define your criteria), 5) Sends alerts only for cities where temperature changed >20\u00b0F from yesterday. Include error handling for network timeouts, invalid responses, and partial failures.",
+    "domain": "analytical",
+    "complexity": "medium",
+    "expected_response_length": 200
+  },
+  {
+    "id": "compositional_2",
+    "prompt": "You're given a dataset of financial transactions with potential fraud. Design a real-time anomaly detection system that: 1) Processes transactions as a stream, 2) Maintains user behavior profiles, 3) Flags suspicious patterns (unusual amounts, locations, timing), 4) Has <100ms latency requirement, 5) Minimizes false positives while catching sophisticated fraud. Explain your algorithm and trade-offs.",
+    "domain": "analytical",
+    "complexity": "medium",
+    "expected_response_length": 200
+  },
+  {
+    "id": "compositional_3",
+    "prompt": "Debug this distributed system issue: Users report that 15% of database writes are 'lost' (not appearing in reads), but only during peak hours (6-8 PM). The system uses: primary/replica MySQL, Redis cache, load balancers, and microservices. Logs show no errors. Design a systematic investigation plan and hypothesize the 3 most likely root causes with testing strategies for each.",
+    "domain": "analytical",
+    "complexity": "medium",
+    "expected_response_length": 200
+  },
+  {
+    "id": "end2end_1",
+    "prompt": "Design a privacy-preserving recommendation system for a social media platform with 100M users. Requirements: 1) No user data leaves their device, 2) Still provides personalized recommendations, 3) Handles cold start problem, 4) Resists inference attacks, 5) Scales efficiently. Propose the architecture, explain the cryptographic/ML techniques, analyze privacy guarantees, and estimate computational costs. Consider adversarial scenarios.",
+    "domain": "analytical",
+    "complexity": "medium",
+    "expected_response_length": 200
+  },
+  {
+    "id": "end2end_2",
+    "prompt": "A quantum computing startup claims their 100-qubit processor can break RSA-2048 encryption 'within hours.' Analyze this claim: 1) Evaluate the theoretical requirements (Shor's algorithm complexity), 2) Consider current quantum error rates and decoherence, 3) Estimate actual time requirements, 4) Identify what would need to be true for the claim to hold, 5) Propose experiments to verify/disprove their capabilities. Be quantitative where possible.",
+    "domain": "analytical",
+    "complexity": "medium",
+    "expected_response_length": 200
+  },
+  {
+    "id": "end2end_3",
+    "prompt": "Design an emergency response system for a major city during multiple simultaneous crises (earthquake + cyberattack + pandemic). The system must: 1) Coordinate 20+ agencies with different protocols, 2) Handle infrastructure failures, 3) Prioritize resource allocation under extreme constraints, 4) Maintain communications during blackouts, 5) Adapt to rapidly changing conditions, 6) Handle misinformation spread. Propose the technical architecture, decision algorithms, and failure recovery mechanisms.",
+    "domain": "analytical",
+    "complexity": "medium",
+    "expected_response_length": 200
+  }
+]

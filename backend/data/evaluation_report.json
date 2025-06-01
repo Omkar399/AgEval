@@ -1,0 +1,29 @@
+{
+  "evaluation_id": "eval_20250601_093533",
+  "start_time": "2025-06-01T09:35:33.270976",
+  "end_time": "2025-06-01T09:38:18.271178",
+  "duration_seconds": 165.000202,
+  "agent_info": {
+    "name": "TestAgent",
+    "model": "gemini-2.0-flash-lite",
+    "provider": "google",
+    "temperature": 0.7,
+    "max_tokens": 2000
+  },
+  "judge_names": [
+    "JudgeA",
+    "JudgeB",
+    "JudgeC"
+  ],
+  "num_tasks": 9,
+  "num_anchors": 5,
+  "num_metrics": 5,
+  "final_performance": {
+    "Completeness": 0.875925925925926,
+    "Reasoning Clarity": 0.5629629629629629,
+    "Technical Precision": 0.5148148148148147,
+    "Response Accuracy": 0.5592592592592592,
+    "Relevance": 0.9370370370370369
+  },
+  "status": "completed"
+}

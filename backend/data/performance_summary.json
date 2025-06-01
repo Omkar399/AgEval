@@ -1,0 +1,108 @@
+{
+  "agent_info": {
+    "name": "TestAgent",
+    "model": "gemini-2.0-flash-lite",
+    "provider": "google",
+    "temperature": 0.7,
+    "max_tokens": 2000
+  },
+  "overall_performance": {
+    "Completeness": 0.875925925925926,
+    "Reasoning Clarity": 0.5629629629629629,
+    "Technical Precision": 0.5148148148148147,
+    "Response Accuracy": 0.5592592592592592,
+    "Relevance": 0.9370370370370369
+  },
+  "tier_performance": {
+    "atomic": {
+      "Completeness": 0.8277777777777778,
+      "Reasoning Clarity": 0.5666666666666667,
+      "Technical Precision": 0.5333333333333333,
+      "Response Accuracy": 0.5666666666666667,
+      "Relevance": 0.9055555555555556
+    },
+    "compositional": {
+      "Completeness": 0.8888888888888888,
+      "Reasoning Clarity": 0.5444444444444444,
+      "Technical Precision": 0.5,
+      "Response Accuracy": 0.5444444444444444,
+      "Relevance": 0.9444444444444445
+    },
+    "end-to-end": {
+      "Completeness": 0.9111111111111111,
+      "Reasoning Clarity": 0.5777777777777778,
+      "Technical Precision": 0.5111111111111111,
+      "Response Accuracy": 0.5666666666666668,
+      "Relevance": 0.9611111111111111
+    }
+  },
+  "statistics": {
+    "Completeness": {
+      "mean": 0.875925925925926,
+      "median": 0.9,
+      "std": 0.1021712164750646,
+      "min": 0.6000000000000001,
+      "max": 0.9500000000000001,
+      "q25": 0.8833333333333334,
+      "q75": 0.9333333333333332,
+      "count": 9
+    },
+    "Reasoning Clarity": {
+      "mean": 0.5629629629629629,
+      "median": 0.5666666666666668,
+      "std": 0.03312693299999688,
+      "min": 0.5,
+      "max": 0.6,
+      "q25": 0.5333333333333333,
+      "q75": 0.6,
+      "count": 9
+    },
+    "Technical Precision": {
+      "mean": 0.5148148148148147,
+      "median": 0.5,
+      "std": 0.04475202212442435,
+      "min": 0.4333333333333333,
+      "max": 0.6,
+      "q25": 0.5,
+      "q75": 0.5333333333333333,
+      "count": 9
+    },
+    "Response Accuracy": {
+      "mean": 0.5592592592592592,
+      "median": 0.5666666666666668,
+      "std": 0.04655483366657977,
+      "min": 0.4666666666666666,
+      "max": 0.6333333333333333,
+      "q25": 0.5333333333333333,
+      "q75": 0.6,
+      "count": 9
+    },
+    "Relevance": {
+      "mean": 0.9370370370370369,
+      "median": 0.9500000000000001,
+      "std": 0.07689088700750626,
+      "min": 0.7333333333333334,
+      "max": 1.0,
+      "q25": 0.9333333333333332,
+      "q75": 0.9833333333333334,
+      "count": 9
+    }
+  },
+  "outliers": {
+    "Completeness": [],
+    "Reasoning Clarity": [],
+    "Technical Precision": [],
+    "Response Accuracy": [],
+    "Relevance": []
+  },
+  "summary_metrics": {
+    "overall_mean": 0.6900000000000001,
+    "overall_median": 0.5629629629629629,
+    "overall_std": 0.17861531108861078,
+    "min_metric_score": 0.5148148148148147,
+    "max_metric_score": 0.9370370370370369,
+    "metrics_above_70": 2,
+    "metrics_below_50": 0
+  },
+  "recommendations": []
+}

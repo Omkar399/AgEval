@@ -1,0 +1,65 @@
+{
+  "compositional_2": {
+    "Completeness": 0.9166666666666666,
+    "Reasoning Clarity": 0.5333333333333333,
+    "Technical Precision": 0.5,
+    "Response Accuracy": 0.5666666666666668,
+    "Relevance": 0.9666666666666667
+  },
+  "compositional_3": {
+    "Completeness": 0.9,
+    "Reasoning Clarity": 0.5666666666666668,
+    "Technical Precision": 0.5,
+    "Response Accuracy": 0.5333333333333333,
+    "Relevance": 0.9500000000000001
+  },
+  "atomic_1": {
+    "Completeness": 0.9500000000000001,
+    "Reasoning Clarity": 0.6,
+    "Technical Precision": 0.6,
+    "Response Accuracy": 0.6333333333333333,
+    "Relevance": 1.0
+  },
+  "compositional_1": {
+    "Completeness": 0.85,
+    "Reasoning Clarity": 0.5333333333333333,
+    "Technical Precision": 0.5,
+    "Response Accuracy": 0.5333333333333333,
+    "Relevance": 0.9166666666666666
+  },
+  "end2end_1": {
+    "Completeness": 0.8833333333333334,
+    "Reasoning Clarity": 0.5666666666666668,
+    "Technical Precision": 0.5,
+    "Response Accuracy": 0.5333333333333333,
+    "Relevance": 0.9333333333333332
+  },
+  "end2end_2": {
+    "Completeness": 0.9500000000000001,
+    "Reasoning Clarity": 0.6,
+    "Technical Precision": 0.5333333333333333,
+    "Response Accuracy": 0.6,
+    "Relevance": 1.0
+  },
+  "atomic_3": {
+    "Completeness": 0.6000000000000001,
+    "Reasoning Clarity": 0.5,
+    "Technical Precision": 0.4333333333333333,
+    "Response Accuracy": 0.4666666666666666,
+    "Relevance": 0.7333333333333334
+  },
+  "atomic_2": {
+    "Completeness": 0.9333333333333332,
+    "Reasoning Clarity": 0.6,
+    "Technical Precision": 0.5666666666666668,
+    "Response Accuracy": 0.6,
+    "Relevance": 0.9833333333333334
+  },
+  "end2end_3": {
+    "Completeness": 0.9,
+    "Reasoning Clarity": 0.5666666666666668,
+    "Technical Precision": 0.5,
+    "Response Accuracy": 0.5666666666666668,
+    "Relevance": 0.9500000000000001
+  }
+}

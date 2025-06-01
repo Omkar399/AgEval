@@ -1,0 +1,197 @@
+{
+  "JudgeA": {
+    "atomic_1": {
+      "Completeness": 0.9,
+      "Reasoning Clarity": 0.9,
+      "Technical Precision": 0.8,
+      "Response Accuracy": 0.9,
+      "Relevance": 1.0
+    },
+    "atomic_2": {
+      "Completeness": 0.9,
+      "Reasoning Clarity": 0.9,
+      "Technical Precision": 0.8,
+      "Response Accuracy": 0.9,
+      "Relevance": 1.0
+    },
+    "atomic_3": {
+      "Completeness": 0.8,
+      "Reasoning Clarity": 0.8,
+      "Technical Precision": 0.7,
+      "Response Accuracy": 0.8,
+      "Relevance": 0.9
+    },
+    "compositional_1": {
+      "Completeness": 0.9,
+      "Reasoning Clarity": 0.8,
+      "Technical Precision": 0.8,
+      "Response Accuracy": 0.9,
+      "Relevance": 1.0
+    },
+    "compositional_2": {
+      "Completeness": 0.9,
+      "Reasoning Clarity": 0.8,
+      "Technical Precision": 0.8,
+      "Response Accuracy": 0.9,
+      "Relevance": 1.0
+    },
+    "compositional_3": {
+      "Completeness": 0.9,
+      "Reasoning Clarity": 0.8,
+      "Technical Precision": 0.7,
+      "Response Accuracy": 0.8,
+      "Relevance": 1.0
+    },
+    "end2end_1": {
+      "Completeness": 0.9,
+      "Reasoning Clarity": 0.9,
+      "Technical Precision": 0.8,
+      "Response Accuracy": 0.9,
+      "Relevance": 1.0
+    },
+    "end2end_2": {
+      "Completeness": 0.9,
+      "Reasoning Clarity": 0.9,
+      "Technical Precision": 0.8,
+      "Response Accuracy": 0.9,
+      "Relevance": 1.0
+    },
+    "end2end_3": {
+      "Completeness": 0.9,
+      "Reasoning Clarity": 0.9,
+      "Technical Precision": 0.8,
+      "Response Accuracy": 0.9,
+      "Relevance": 1.0
+    }
+  },
+  "JudgeB": {
+    "atomic_1": {
+      "Completeness": 0.95,
+      "Reasoning Clarity": 0.0,
+      "Technical Precision": 0.0,
+      "Response Accuracy": 0.0,
+      "Relevance": 1.0
+    },
+    "atomic_2": {
+      "Completeness": 0.9,
+      "Reasoning Clarity": 0.0,
+      "Technical Precision": 0.0,
+      "Response Accuracy": 0.0,
+      "Relevance": 0.95
+    },
+    "atomic_3": {
+      "Completeness": 0.4,
+      "Reasoning Clarity": 0.0,
+      "Technical Precision": 0.0,
+      "Response Accuracy": 0.0,
+      "Relevance": 0.6
+    },
+    "compositional_1": {
+      "Completeness": 0.85,
+      "Reasoning Clarity": 0.0,
+      "Technical Precision": 0.0,
+      "Response Accuracy": 0.0,
+      "Relevance": 0.95
+    },
+    "compositional_2": {
+      "Completeness": 0.95,
+      "Reasoning Clarity": 0.0,
+      "Technical Precision": 0.0,
+      "Response Accuracy": 0.0,
+      "Relevance": 1.0
+    },
+    "compositional_3": {
+      "Completeness": 0.9,
+      "Reasoning Clarity": 0.0,
+      "Technical Precision": 0.0,
+      "Response Accuracy": 0.0,
+      "Relevance": 0.95
+    },
+    "end2end_1": {
+      "Completeness": 0.95,
+      "Reasoning Clarity": 0.0,
+      "Technical Precision": 0.0,
+      "Response Accuracy": 0.0,
+      "Relevance": 1.0
+    },
+    "end2end_2": {
+      "Completeness": 0.95,
+      "Reasoning Clarity": 0.0,
+      "Technical Precision": 0.0,
+      "Response Accuracy": 0.0,
+      "Relevance": 1.0
+    },
+    "end2end_3": {
+      "Completeness": 0.9,
+      "Reasoning Clarity": 0.0,
+      "Technical Precision": 0.0,
+      "Response Accuracy": 0.0,
+      "Relevance": 0.95
+    }
+  },
+  "JudgeC": {
+    "atomic_1": {
+      "Completeness": 1.0,
+      "Reasoning Clarity": 0.9,
+      "Technical Precision": 1.0,
+      "Response Accuracy": 1.0,
+      "Relevance": 1.0
+    },
+    "atomic_2": {
+      "Completeness": 1.0,
+      "Reasoning Clarity": 0.9,
+      "Technical Precision": 0.9,
+      "Response Accuracy": 0.9,
+      "Relevance": 1.0
+    },
+    "atomic_3": {
+      "Completeness": 0.6,
+      "Reasoning Clarity": 0.7,
+      "Technical Precision": 0.6,
+      "Response Accuracy": 0.6,
+      "Relevance": 0.7
+    },
+    "compositional_1": {
+      "Completeness": 0.8,
+      "Reasoning Clarity": 0.8,
+      "Technical Precision": 0.7,
+      "Response Accuracy": 0.7,
+      "Relevance": 0.8
+    },
+    "compositional_2": {
+      "Completeness": 0.9,
+      "Reasoning Clarity": 0.8,
+      "Technical Precision": 0.7,
+      "Response Accuracy": 0.8,
+      "Relevance": 0.9
+    },
+    "compositional_3": {
+      "Completeness": 0.9,
+      "Reasoning Clarity": 0.9,
+      "Technical Precision": 0.8,
+      "Response Accuracy": 0.8,
+      "Relevance": 0.9
+    },
+    "end2end_1": {
+      "Completeness": 0.8,
+      "Reasoning Clarity": 0.8,
+      "Technical Precision": 0.7,
+      "Response Accuracy": 0.7,
+      "Relevance": 0.8
+    },
+    "end2end_2": {
+      "Completeness": 1.0,
+      "Reasoning Clarity": 0.9,
+      "Technical Precision": 0.8,
+      "Response Accuracy": 0.9,
+      "Relevance": 1.0
+    },
+    "end2end_3": {
+      "Completeness": 0.9,
+      "Reasoning Clarity": 0.8,
+      "Technical Precision": 0.7,
+      "Response Accuracy": 0.8,
+      "Relevance": 0.9
+    }
+  }
+}

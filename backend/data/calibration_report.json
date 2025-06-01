@@ -1,0 +1,81 @@
+{
+  "bias_analysis": {
+    "judge_biases": {
+      "JudgeA": {
+        "Completeness": 0.0,
+        "Reasoning Clarity": 0.0,
+        "Technical Precision": 0.0,
+        "Response Accuracy": 0.0,
+        "Relevance": 0.0
+      },
+      "JudgeB": {
+        "Completeness": 0.0,
+        "Reasoning Clarity": 0.0,
+        "Technical Precision": 0.0,
+        "Response Accuracy": 0.0,
+        "Relevance": 0.0
+      },
+      "JudgeC": {
+        "Completeness": 0.0,
+        "Reasoning Clarity": 0.0,
+        "Technical Precision": 0.0,
+        "Response Accuracy": 0.0,
+        "Relevance": 0.0
+      }
+    },
+    "large_biases": [],
+    "bias_summary": {}
+  },
+  "agreement_analysis": {
+    "metric_agreements": {
+      "Completeness": {
+        "valid_tasks": 9,
+        "cohens_kappa": 0.8697708956241291,
+        "pearson_correlation": 0.8697708956241291,
+        "spearman_correlation": 0.5638600013934155,
+        "mean_pairwise_agreement": 0.9259259259259259
+      },
+      "Reasoning Clarity": {
+        "valid_tasks": 9,
+        "cohens_kappa": 0.447213595499958,
+        "pearson_correlation": 0.447213595499958,
+        "spearman_correlation": NaN,
+        "mean_pairwise_agreement": 0.3688888888888889
+      },
+      "Technical Precision": {
+        "valid_tasks": 9,
+        "cohens_kappa": 0.3086066999241836,
+        "pearson_correlation": 0.3086066999241836,
+        "spearman_correlation": NaN,
+        "mean_pairwise_agreement": 0.36962962962962953
+      },
+      "Response Accuracy": {
+        "valid_tasks": 9,
+        "cohens_kappa": 0.46291004988627565,
+        "pearson_correlation": 0.46291004988627565,
+        "spearman_correlation": NaN,
+        "mean_pairwise_agreement": 0.3185185185185185
+      },
+      "Relevance": {
+        "valid_tasks": 9,
+        "cohens_kappa": 0.7782519062391161,
+        "pearson_correlation": 0.7782519062391161,
+        "spearman_correlation": 0.5416968784708996,
+        "mean_pairwise_agreement": 0.9244444444444445
+      }
+    },
+    "problematic_metrics": [
+      "Reasoning Clarity",
+      "Technical Precision",
+      "Response Accuracy"
+    ],
+    "overall_agreement": {
+      "mean_cohens_kappa": 0.5733506294347326,
+      "mean_pearson_correlation": 0.5733506294347326,
+      "mean_spearman_correlation": NaN
+    }
+  },
+  "recommendations": [
+    "Refine definitions for metrics with low inter-judge agreement"
+  ]
+}

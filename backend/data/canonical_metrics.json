@@ -1,0 +1,55 @@
+[
+  {
+    "name": "Completeness",
+    "definition": "Confidence that the response addresses all aspects of the prompt's requirements, including all sub-tasks and considerations.  A higher confidence indicates a more thorough and comprehensive answer.",
+    "scale": "Confidence [0.0-1.0]",
+    "proposed_by": [
+      "JudgeA",
+      "JudgeB",
+      "JudgeC"
+    ],
+    "consensus_count": 3
+  },
+  {
+    "name": "Reasoning Clarity",
+    "definition": "Confidence in how well the response explains its approach, assumptions, and trade-offs, with clear logical flow and appropriate justification of key decisions.",
+    "scale": "Confidence [0.0-1.0]",
+    "proposed_by": [
+      "JudgeA",
+      "JudgeB",
+      "JudgeC"
+    ],
+    "consensus_count": 3
+  },
+  {
+    "name": "Technical Precision",
+    "definition": "Confidence in the mathematical, algorithmic, and technical accuracy of specific claims and solutions, including correctness of formulas, code logic, and system specifications.",
+    "scale": "Confidence [0.0-1.0]",
+    "proposed_by": [
+      "JudgeA",
+      "JudgeB",
+      "JudgeC"
+    ],
+    "consensus_count": 3
+  },
+  {
+    "name": "Response Accuracy",
+    "definition": "Confidence in the factual correctness and logical soundness of the agent's response, considering accuracy of information, calculations, and reasoning.",
+    "scale": "Confidence [0.0-1.0]",
+    "proposed_by": [
+      "JudgeA",
+      "JudgeC"
+    ],
+    "consensus_count": 2
+  },
+  {
+    "name": "Relevance",
+    "definition": "Confidence in the relevance of the response to the specific task prompt, evaluating how well the content aligns with the task requirements and objectives.",
+    "scale": "Confidence [0.0-1.0]",
+    "proposed_by": [
+      "JudgeA",
+      "JudgeC"
+    ],
+    "consensus_count": 2
+  }
+]
