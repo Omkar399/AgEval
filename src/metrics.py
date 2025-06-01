@@ -164,11 +164,13 @@ class MetricConsolidator:
             # Prefer longer, more detailed definitions
             score += len(definition.split()) * 0.1
             
-            # Prefer binary or numeric scales over categorical
+            # Prefer confidence-based scales, then numeric, then binary, then categorical
             scale = metric.get('scale', '').lower()
-            if 'binary' in scale:
-                score += 2
+            if 'confidence' in scale or '[0.0-1.0]' in scale:
+                score += 3  # Highest preference for confidence scoring
             elif 'numeric' in scale:
+                score += 2
+            elif 'binary' in scale:
                 score += 1.5
             elif 'categorical' in scale:
                 score += 1
@@ -202,40 +204,40 @@ class MetricConsolidator:
         defaults = [
             {
                 "name": "Task Completion",
-                "definition": "Whether the agent provided a complete response addressing all parts of the prompt. Score 1 if complete, 0 if incomplete.",
-                "scale": "Binary",
+                "definition": "Confidence in how completely the agent addressed all parts of the prompt and task requirements. Higher scores for comprehensive responses that cover all aspects.",
+                "scale": "Confidence [0.0-1.0]",
                 "proposed_by": ["system"],
                 "is_default": True
             },
             {
                 "name": "Response Relevance", 
-                "definition": "How relevant the agent's response is to the given prompt. Score 1 if highly relevant, 0.5 if somewhat relevant, 0 if irrelevant.",
-                "scale": "Numeric",
+                "definition": "Confidence in how relevant and on-topic the agent's response is to the given prompt. Higher scores for responses that directly address the question or task.",
+                "scale": "Confidence [0.0-1.0]",
                 "proposed_by": ["system"],
                 "is_default": True
             },
             {
                 "name": "Factual Accuracy",
-                "definition": "Whether the response contains factually correct information. Score 1 if accurate, 0.5 if mostly accurate, 0 if inaccurate.",
-                "scale": "Numeric", 
+                "definition": "Confidence in the factual correctness and technical accuracy of the information provided. Higher scores for responses with verified correct information.",
+                "scale": "Confidence [0.0-1.0]", 
                 "proposed_by": ["system"],
                 "is_default": True
             },
             {
                 "name": "Clarity and Coherence",
-                "definition": "How clear and well-structured the response is. Score 1 if very clear, 0.5 if somewhat clear, 0 if unclear.",
-                "scale": "Numeric",
+                "definition": "Confidence in how clear, well-structured, and easy to understand the response is. Higher scores for responses with logical flow and good organization.",
+                "scale": "Confidence [0.0-1.0]",
                 "proposed_by": ["system"],
                 "is_default": True
             },
             {
-                "name": "Format Compliance",
-                "definition": "Whether the response follows any specified format requirements. Score 1 if compliant, 0 if non-compliant.",
-                "scale": "Binary",
+                "name": "Response Quality",
+                "definition": "Overall confidence in the quality and usefulness of the response considering all factors like depth, insight, and practical value.",
+                "scale": "Confidence [0.0-1.0]",
                 "proposed_by": ["system"],
                 "is_default": True
             }
         ]
         
-        logger.warning(f"Adding {count} default metrics to reach target count")
+        logger.warning(f"Adding {count} default confidence-based metrics to reach target count")
         return defaults[:count] 

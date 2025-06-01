@@ -62,8 +62,25 @@ class Aggregator:
                 elif aggregation_method == "weighted_mean":
                     # Could implement judge-specific weights here
                     aggregated_score = np.mean(judge_scores)  # Default to equal weights
+                elif aggregation_method == "confidence_weighted":
+                    # For confidence scores, weight by the scores themselves (higher confidence = higher weight)
+                    if len(judge_scores) > 1:
+                        weights = np.array(judge_scores)
+                        # Avoid division by zero
+                        if np.sum(weights) > 0:
+                            aggregated_score = np.average(judge_scores, weights=weights)
+                        else:
+                            aggregated_score = np.mean(judge_scores)
+                    else:
+                        aggregated_score = judge_scores[0] if judge_scores else 0.0
+                elif aggregation_method == "conservative":
+                    # Conservative approach: use minimum for high-stakes decisions
+                    aggregated_score = np.min(judge_scores)
+                elif aggregation_method == "optimistic":
+                    # Optimistic approach: use maximum confidence
+                    aggregated_score = np.max(judge_scores)
                 else:
-                    # Default to mean
+                    # Default to mean (best for confidence scores)
                     aggregated_score = np.mean(judge_scores)
                 
                 aggregated_scores[task_id][metric_name] = float(aggregated_score)

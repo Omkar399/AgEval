@@ -119,12 +119,19 @@ class Judge:
         task_descriptions = []
         for i, task in enumerate(tasks, 1):
             task_descriptions.append(f"{i}. [{task['id']}] \"{task['prompt']}\"")
-        
+
         prompt = f"""You are evaluating Agent outputs across a diverse set of tasks. Each task is listed below with its ID and prompt. Your job is to propose exactly five evaluation metrics that apply across all tasks. For each metric, provide:
 
-1. Name (short, e.g., "Arithmetic Correctness")
-2. Definition (1–2 sentences explaining how to compute it in a task-agnostic way)
-3. Scale (Binary {{0,1}}, Numeric [0–1], or Categorical {{Low, Medium, High}})
+1. Name (short, e.g., "Response Accuracy")
+2. Definition (1–2 sentences explaining how to assess it with confidence scoring)
+3. Scale (Always use "Confidence [0.0-1.0]" for nuanced evaluation)
+
+Focus on metrics that can be assessed with confidence levels rather than binary pass/fail. Consider aspects like:
+- Quality and accuracy of responses
+- Completeness and thoroughness  
+- Relevance to the task requirements
+- Clarity and coherence of explanations
+- Technical correctness when applicable
 
 The tasks:
 {chr(10).join(task_descriptions)}
@@ -132,9 +139,9 @@ The tasks:
 Output format (JSON array of five objects):
 [
   {{
-    "name": "Arithmetic Correctness",
-    "definition": "If Agent's final integer matches the true product+sum, score = 1; else 0.",
-    "scale": "Binary"
+    "name": "Response Accuracy", 
+    "definition": "Confidence in the factual correctness and logical soundness of the agent's response, considering accuracy of information, calculations, and reasoning.",
+    "scale": "Confidence [0.0-1.0]"
   }},
   ...
 ]
@@ -152,7 +159,7 @@ Return only valid JSON - no additional text or markdown formatting."""
             raise
     
     def score_outputs(self, tasks_outputs: Dict[str, Dict[str, Any]], metrics: List[Dict[str, Any]]) -> Dict[str, Dict[str, float]]:
-        """Score agent outputs using the provided metrics."""
+        """Score agent outputs using confidence-based evaluation."""
         # Build metrics description
         metrics_desc = []
         for i, metric in enumerate(metrics, 1):
@@ -162,10 +169,18 @@ Return only valid JSON - no additional text or markdown formatting."""
         tasks_desc = []
         for task_id, output_data in tasks_outputs.items():
             tasks_desc.append(f"\"{task_id}\": {{\n    \"prompt\": \"{output_data['prompt']}\",\n    \"response\": \"{output_data['response']}\"\n  }}")
-        
-        prompt = f"""Below are five evaluation metrics (each with name, definition, and scale). Then, for each task ID, you will see Agent's prompt and its response. Your job is to output a JSON object mapping each TaskID to that example's score vector. Use the metric definitions exactly as given. For numeric metrics, output a decimal between 0 and 1. For binary, use 0 or 1. For categorical, map {{Low, Medium, High}} to {{0, 0.5, 1}}.
 
-Metrics:
+        prompt = f"""You are an expert evaluator using confidence-based scoring. Below are evaluation metrics, each with a confidence scale from 0.0 to 1.0. For each task, evaluate the agent's response and provide your confidence score for each metric.
+
+Confidence Scoring Guidelines:
+- 1.0: Extremely confident - Exceptional quality, fully meets or exceeds expectations
+- 0.8-0.9: Very confident - High quality with minor areas for improvement  
+- 0.6-0.7: Moderately confident - Adequate quality with some notable issues
+- 0.4-0.5: Low confidence - Below expectations with significant problems
+- 0.2-0.3: Very low confidence - Poor quality with major deficiencies
+- 0.0-0.1: No confidence - Completely inadequate or incorrect
+
+Evaluation Metrics:
 {chr(10).join(metrics_desc)}
 
 Agent Outputs:
@@ -173,8 +188,11 @@ Agent Outputs:
   {',\n  '.join(tasks_desc)}
 }}
 
+For each task, evaluate the agent's response against each metric and provide a confidence score between 0.0 and 1.0. Consider the specific requirements of each task and be precise in your scoring.
+
 Output (JSON):
-Return an object {{ TaskID: {{ "MetricName": score, ... }} }} for every TaskID.
+Return an object {{ TaskID: {{ "MetricName": confidence_score, ... }} }} for every TaskID.
+All scores must be floating point numbers between 0.0 and 1.0.
 
 Return only valid JSON - no additional text or markdown formatting."""
         
@@ -182,17 +200,16 @@ Return only valid JSON - no additional text or markdown formatting."""
         try:
             scores = validate_json_response(response)
             
-            # Validate and normalize scores
+            # Validate and normalize confidence scores
             normalized_scores = {}
             for task_id, task_scores in scores.items():
                 normalized_scores[task_id] = {}
                 for metric in metrics:
                     metric_name = metric['name']
                     if metric_name in task_scores:
-                        from .utils import normalize_score
-                        normalized_scores[task_id][metric_name] = normalize_score(
-                            task_scores[metric_name], metric['scale']
-                        )
+                        score = float(task_scores[metric_name])
+                        # Ensure score is within 0.0-1.0 range
+                        normalized_scores[task_id][metric_name] = max(0.0, min(1.0, score))
                     else:
                         logger.warning(f"Missing score for {metric_name} in task {task_id}")
                         normalized_scores[task_id][metric_name] = 0.0

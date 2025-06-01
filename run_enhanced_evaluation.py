@@ -53,7 +53,7 @@ def main():
         print(f"   • Token Optimization: {'✅ Enabled' if pipeline.config.get('token_optimization', {}).get('enabled') else '❌ Disabled'}")
         
         # Check if user wants to compare modes
-        use_adaptive = True  # Default to adaptive
+        use_adaptive = True  # Re-enable adaptive mode for testing
         print(f"\n🎯 EVALUATION MODE: {'Adaptive IRT-based Evaluation' if use_adaptive else 'Traditional Static Evaluation'}")
         
         # Run enhanced evaluation

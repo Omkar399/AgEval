@@ -151,7 +151,10 @@ def validate_json_response(response: str) -> Dict[str, Any]:
 
 def normalize_score(score: Any, scale: str) -> float:
     """Normalize score to 0-1 range based on scale type."""
-    if scale.lower() == "binary":
+    # Handle confidence-based scoring (new format)
+    if "confidence" in scale.lower() or "[0.0-1.0]" in scale.lower():
+        return max(0.0, min(1.0, float(score)))
+    elif scale.lower() == "binary":
         return float(score) if score in [0, 1] else 0.0
     elif scale.lower() == "numeric":
         return max(0.0, min(1.0, float(score)))

@@ -138,8 +138,8 @@ class Calibrator:
             agreement_results[metric_name]['valid_tasks'] = len(valid_tasks)
             
             # Compute different agreement metrics
-            if scale == 'binary':
-                # For binary metrics, use Cohen's kappa
+            if scale == 'binary' or "confidence" not in scale.lower():
+                # For legacy binary metrics, use Cohen's kappa
                 kappa_scores = []
                 for i in range(len(judge_names)):
                     for j in range(i + 1, len(judge_names)):
@@ -153,7 +153,22 @@ class Calibrator:
                 
                 agreement_results[metric_name]['cohens_kappa'] = np.mean(kappa_scores) if kappa_scores else 0.0
             else:
-                agreement_results[metric_name]['cohens_kappa'] = 0.0  # Not applicable for non-binary
+                # For confidence-based metrics, compute Intraclass Correlation Coefficient (ICC) instead
+                try:
+                    # Simple ICC approximation using correlation
+                    all_pairs_corr = []
+                    for i in range(len(judge_names)):
+                        for j in range(i + 1, len(judge_names)):
+                            scores_i = score_matrix[:, i]
+                            scores_j = score_matrix[:, j]
+                            if np.std(scores_i) > 0 and np.std(scores_j) > 0:
+                                corr, _ = pearsonr(scores_i, scores_j)
+                                if not np.isnan(corr):
+                                    all_pairs_corr.append(corr)
+                    
+                    agreement_results[metric_name]['cohens_kappa'] = np.mean(all_pairs_corr) if all_pairs_corr else 0.0
+                except:
+                    agreement_results[metric_name]['cohens_kappa'] = 0.0
             
             # Compute correlations for all metrics
             pearson_correlations = []
@@ -183,13 +198,35 @@ class Calibrator:
                     scores_i = score_matrix[:, i]
                     scores_j = score_matrix[:, j]
                     
-                    if scale == 'binary':
-                        # Proportion of exact matches
+                    if scale == 'binary' and "confidence" not in scale.lower():
+                        # Proportion of exact matches for binary
                         agreement = np.mean((scores_i > 0.5) == (scores_j > 0.5))
                     else:
-                        # 1 - Mean Absolute Error (higher is better)
+                        # For confidence scores, use multiple agreement measures
+                        # 1. Inverted Mean Absolute Error (higher is better)
                         mae = np.mean(np.abs(scores_i - scores_j))
-                        agreement = max(0.0, 1.0 - mae)
+                        mae_agreement = max(0.0, 1.0 - mae)
+                        
+                        # 2. Agreement within tolerance bands
+                        tolerance_01 = np.mean(np.abs(scores_i - scores_j) <= 0.1)  # Within 10%
+                        tolerance_02 = np.mean(np.abs(scores_i - scores_j) <= 0.2)  # Within 20%
+                        
+                        # 3. Directional agreement (both high, both medium, both low)
+                        high_i = scores_i >= 0.7
+                        high_j = scores_j >= 0.7
+                        med_i = (scores_i >= 0.4) & (scores_i < 0.7)
+                        med_j = (scores_j >= 0.4) & (scores_j < 0.7)
+                        low_i = scores_i < 0.4
+                        low_j = scores_j < 0.4
+                        
+                        directional_agreement = np.mean(
+                            (high_i & high_j) | (med_i & med_j) | (low_i & low_j)
+                        )
+                        
+                        # Combine measures (weighted average)
+                        agreement = (0.4 * mae_agreement + 
+                                   0.3 * tolerance_02 + 
+                                   0.3 * directional_agreement)
                     
                     pairwise_agreements.append(agreement)
             

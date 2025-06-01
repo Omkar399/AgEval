@@ -2,58 +2,58 @@
   {
     "id": "atomic_1",
     "tier": "atomic",
-    "prompt": "Compute 47 × 382 + 129.",
-    "gold_answer": "18083",
-    "description": "Basic arithmetic computation test"
+    "prompt": "A recursive function f(n) is defined as: f(1) = 2, f(n) = 3*f(n-1) + (-1)^n for n > 1. Calculate f(6) and explain your reasoning step by step. Also determine if there's a pattern in the sequence.",
+    "gold_answer": "f(6) = 485, sequence alternates between odd/even with exponential growth",
+    "description": "Complex recursive mathematics with pattern recognition"
   },
   {
     "id": "atomic_2", 
     "tier": "atomic",
-    "prompt": "Given the JSON: {\"user\": {\"id\": 123, \"profile\": {\"email\": \"alice@example.com\", \"age\": 30}}} Extract user.profile.email.",
-    "gold_answer": "alice@example.com",
-    "description": "JSON parsing and field extraction"
+    "prompt": "Given this malformed JSON: {\"users\": [{\"name\": \"Alice\", \"data\": {\"age\": 25, \"city\": \"NYC\", \"nested\": {\"score\": \"invalid_number\"}}, \"name\": \"Bob\", \"age\": \"thirty\"}]} - Parse it, identify all errors, fix them, and extract the average age of valid users.",
+    "gold_answer": "Errors: missing closing bracket, invalid number format, inconsistent structure. Fixed average age calculation needed.",
+    "description": "Complex JSON parsing with error handling and data validation"
   },
   {
     "id": "atomic_3",
     "tier": "atomic", 
-    "prompt": "Convert the temperature 32°F to Celsius. Show your calculation.",
-    "gold_answer": "0°C",
-    "description": "Unit conversion with formula application"
+    "prompt": "A cylindrical water tank (radius 3m, height 8m) has a conical leak at the bottom (cone height 0.5m, radius 0.2m). If water flows out at 0.1 m³/min and flows in at 0.15 m³/min, when will the tank be exactly half full? Consider the complex geometry when water level drops below the cone.",
+    "gold_answer": "Complex calculation requiring piecewise volume functions",
+    "description": "Advanced physics/engineering problem with geometric complexity"
   },
   {
     "id": "compositional_1",
     "tier": "compositional",
-    "prompt": "Task: Check current weather for Chicago via GET /weather?city=Chicago → returns JSON like {\"temp\": 45, \"unit\": \"F\"}. If temp < 50, send a Slack message to #general saying \"It's cold—wear a jacket.\" Use POST /slack/message with payload {\"channel\": \"#general\", \"text\": <message>}.",
-    "description": "Two-step API orchestration with conditional logic"
+    "prompt": "Build a rate-limited API client that: 1) Fetches weather data for 50 cities simultaneously, 2) Implements exponential backoff for failures, 3) Handles rate limits (max 10 requests/minute), 4) Aggregates data to find cities with 'unusual' weather (define your criteria), 5) Sends alerts only for cities where temperature changed >20°F from yesterday. Include error handling for network timeouts, invalid responses, and partial failures.",
+    "description": "Complex distributed systems challenge with multiple failure modes"
   },
   {
     "id": "compositional_2",
     "tier": "compositional",
-    "prompt": "Given the CSV string \"72,68,75,70\", parse the four numbers, compute their average, and return Python code that plots a histogram of those values using matplotlib.",
-    "description": "Data processing pipeline: parse → compute → generate code"
+    "prompt": "You're given a dataset of financial transactions with potential fraud. Design a real-time anomaly detection system that: 1) Processes transactions as a stream, 2) Maintains user behavior profiles, 3) Flags suspicious patterns (unusual amounts, locations, timing), 4) Has <100ms latency requirement, 5) Minimizes false positives while catching sophisticated fraud. Explain your algorithm and trade-offs.",
+    "description": "Machine learning system design with performance constraints"
   },
   {
     "id": "compositional_3",
     "tier": "compositional",
-    "prompt": "Read a user's shopping list: \"apples, bread, milk, eggs\". Check each item against a mock inventory API (assume it returns {\"apples\": 5, \"bread\": 0, \"milk\": 3, \"eggs\": 12}). Generate a summary of available vs out-of-stock items.",
-    "description": "List processing with API lookup and categorization"
+    "prompt": "Debug this distributed system issue: Users report that 15% of database writes are 'lost' (not appearing in reads), but only during peak hours (6-8 PM). The system uses: primary/replica MySQL, Redis cache, load balancers, and microservices. Logs show no errors. Design a systematic investigation plan and hypothesize the 3 most likely root causes with testing strategies for each.",
+    "description": "Complex distributed systems debugging with incomplete information"
   },
   {
     "id": "end2end_1",
     "tier": "end-to-end",
-    "prompt": "Find five recent academic papers on CRISPR applications in agriculture (you may assume citations are known). Extract each paper's title and abstract. Write a 200-word summary that cites each title at least once.",
-    "description": "Research synthesis with citation integration"
+    "prompt": "Design a privacy-preserving recommendation system for a social media platform with 100M users. Requirements: 1) No user data leaves their device, 2) Still provides personalized recommendations, 3) Handles cold start problem, 4) Resists inference attacks, 5) Scales efficiently. Propose the architecture, explain the cryptographic/ML techniques, analyze privacy guarantees, and estimate computational costs. Consider adversarial scenarios.",
+    "description": "Advanced privacy engineering with cryptography and ML constraints"
   },
   {
     "id": "end2end_2", 
     "tier": "end-to-end",
-    "prompt": "A user says: \"My router keeps dropping every few minutes.\" 1) Check a troubleshooting knowledge-base (assume KB returns two steps: \"Restart router,\" \"Check firmware version\"). 2) If neither fixes the problem, create a Jira ticket in project \"NETSUP\" via POST /jira/ticket with fields {\"project\": \"NETSUP\", \"description\": <user's description + attempted fixes>}.",
-    "description": "Support workflow: triage → troubleshoot → escalate"
+    "prompt": "A quantum computing startup claims their 100-qubit processor can break RSA-2048 encryption 'within hours.' Analyze this claim: 1) Evaluate the theoretical requirements (Shor's algorithm complexity), 2) Consider current quantum error rates and decoherence, 3) Estimate actual time requirements, 4) Identify what would need to be true for the claim to hold, 5) Propose experiments to verify/disprove their capabilities. Be quantitative where possible.",
+    "description": "Advanced quantum computing analysis requiring deep technical knowledge"
   },
   {
     "id": "end2end_3",
     "tier": "end-to-end", 
-    "prompt": "Plan a 3-day itinerary for visiting San Francisco. Include: 1) Must-see attractions with estimated visit times, 2) Restaurant recommendations for each meal, 3) Transportation between locations, 4) Total estimated budget breakdown. Present as a structured day-by-day plan.",
-    "description": "Complex planning task with multiple constraints and optimization"
+    "prompt": "Design an emergency response system for a major city during multiple simultaneous crises (earthquake + cyberattack + pandemic). The system must: 1) Coordinate 20+ agencies with different protocols, 2) Handle infrastructure failures, 3) Prioritize resource allocation under extreme constraints, 4) Maintain communications during blackouts, 5) Adapt to rapidly changing conditions, 6) Handle misinformation spread. Propose the technical architecture, decision algorithms, and failure recovery mechanisms.",
+    "description": "Extreme complexity multi-domain crisis management system"
   }
 ] 
