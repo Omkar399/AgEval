@@ -1,0 +1,11 @@
+{
+  "timestamp": "2025-05-31T19:00:03.465036",
+  "data": {
+    "task_id": "anchor_json",
+    "prompt": "Extract name from {\"name\": \"Bob\", \"age\": 25}.",
+    "response": "Bob\n",
+    "timestamp": "2025-05-31T19:00:03.465010",
+    "model": "gemini-1.5-flash",
+    "temperature": 0.7
+  }
+}

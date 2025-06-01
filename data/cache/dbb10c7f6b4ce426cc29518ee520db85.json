@@ -1,0 +1,11 @@
+{
+  "timestamp": "2025-05-31T19:00:03.894518",
+  "data": {
+    "task_id": "anchor_reasoning",
+    "prompt": "If a train travels 60 mph for 2.5 hours, how far does it go? Show your work.",
+    "response": "Distance = Speed x Time\n\nDistance = 60 mph x 2.5 hours\n\nDistance = 150 miles\n",
+    "timestamp": "2025-05-31T19:00:03.894481",
+    "model": "gemini-1.5-flash",
+    "temperature": 0.7
+  }
+}

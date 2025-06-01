@@ -1,0 +1,11 @@
+{
+  "timestamp": "2025-05-31T18:59:44.049180",
+  "data": {
+    "task_id": "compositional_2",
+    "prompt": "Given the CSV string \"72,68,75,70\", parse the four numbers, compute their average, and return Python code that plots a histogram of those values using matplotlib.",
+    "response": "```python\nimport matplotlib.pyplot as plt\nimport csv\nfrom io import StringIO\n\ndef plot_histogram_from_csv_string(csv_string):\n    \"\"\"\n    Parses a CSV string of numbers, computes their average, and plots a histogram.\n\n    Args:\n        csv_string: A CSV string containing numbers separated by commas.\n\n    Returns:\n        None. Displays the histogram.  Returns an error message if the input is invalid.\n\n    \"\"\"\n    try:\n        reader = csv.reader(StringIO(csv_string))\n        data = next(reader)  # Get the first row (assuming only one row of data)\n        numbers = [int(x) for x in data]  # Convert string elements to integers\n\n        if not numbers:\n            return \"Error: CSV string is empty or contains no numbers\"\n        \n        average = sum(numbers) / len(numbers)\n\n        plt.hist(numbers, bins=len(numbers), align='left', rwidth=0.8) # Adjust bins as needed\n        plt.xlabel(\"Values\")\n        plt.ylabel(\"Frequency\")\n        plt.title(f\"Histogram of Values (Average: {average:.2f})\")\n        plt.xticks(numbers) #Ensures all values are shown on x-axis\n        plt.show()\n\n    except ValueError:\n        return \"Error: Invalid input. CSV string must contain only numbers separated by commas.\"\n    except StopIteration:\n        return \"Error: CSV string is empty.\"\n    except Exception as e:\n        return f\"An unexpected error occurred: {e}\"\n\n\ncsv_data = \"72,68,75,70\"\nplot_histogram_from_csv_string(csv_data)\n\n#Example with error handling:\ninvalid_csv_data = \"72,68,abc,70\"\nresult = plot_histogram_from_csv_string(invalid_csv_data)\nprint(result) #Prints the error message\n\nempty_csv_data = \"\"\nresult = plot_histogram_from_csv_string(empty_csv_data)\nprint(result) #Prints the error message\n\n```",
+    "timestamp": "2025-05-31T18:59:44.049111",
+    "model": "gemini-1.5-flash",
+    "temperature": 0.7
+  }
+}

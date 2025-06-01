@@ -1,0 +1,4 @@
+{
+  "timestamp": "2025-05-31T19:13:31.935407",
+  "data": "{\n  \"anchor_arithmetic\": {\n    \"Task Completion\": 1,\n    \"Accuracy\": 1,\n    \"Structural Coherence\": 1,\n    \"Process Validity\": 1,\n    \"Completeness\": 1\n  },\n  \"anchor_json\": {\n    \"Task Completion\": 1,\n    \"Accuracy\": 1,\n    \"Structural Coherence\": 0,\n    \"Process Validity\": 0,\n    \"Completeness\": 1\n  },\n  \"anchor_reasoning\": {\n    \"Task Completion\": 1,\n    \"Accuracy\": 1,\n    \"Structural Coherence\": 1,\n    \"Process Validity\": 1,\n    \"Completeness\": 1\n  },\n  \"anchor_message\": {\n    \"Task Completion\": 1,\n    \"Accuracy\": 1,\n    \"Structural Coherence\": 1,\n    \"Process Validity\": 1,\n    \"Completeness\": 1\n  },\n  \"anchor_api_plan\": {\n    \"Task Completion\": 1,\n    \"Accuracy\": 1,\n    \"Structural Coherence\": 1,\n    \"Process Validity\": 1,\n    \"Completeness\": 1\n  }\n}"
+}

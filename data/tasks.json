@@ -1,0 +1,59 @@
+[
+  {
+    "id": "atomic_1",
+    "tier": "atomic",
+    "prompt": "Compute 47 × 382 + 129.",
+    "gold_answer": "18083",
+    "description": "Basic arithmetic computation test"
+  },
+  {
+    "id": "atomic_2", 
+    "tier": "atomic",
+    "prompt": "Given the JSON: {\"user\": {\"id\": 123, \"profile\": {\"email\": \"alice@example.com\", \"age\": 30}}} Extract user.profile.email.",
+    "gold_answer": "alice@example.com",
+    "description": "JSON parsing and field extraction"
+  },
+  {
+    "id": "atomic_3",
+    "tier": "atomic", 
+    "prompt": "Convert the temperature 32°F to Celsius. Show your calculation.",
+    "gold_answer": "0°C",
+    "description": "Unit conversion with formula application"
+  },
+  {
+    "id": "compositional_1",
+    "tier": "compositional",
+    "prompt": "Task: Check current weather for Chicago via GET /weather?city=Chicago → returns JSON like {\"temp\": 45, \"unit\": \"F\"}. If temp < 50, send a Slack message to #general saying \"It's cold—wear a jacket.\" Use POST /slack/message with payload {\"channel\": \"#general\", \"text\": <message>}.",
+    "description": "Two-step API orchestration with conditional logic"
+  },
+  {
+    "id": "compositional_2",
+    "tier": "compositional",
+    "prompt": "Given the CSV string \"72,68,75,70\", parse the four numbers, compute their average, and return Python code that plots a histogram of those values using matplotlib.",
+    "description": "Data processing pipeline: parse → compute → generate code"
+  },
+  {
+    "id": "compositional_3",
+    "tier": "compositional",
+    "prompt": "Read a user's shopping list: \"apples, bread, milk, eggs\". Check each item against a mock inventory API (assume it returns {\"apples\": 5, \"bread\": 0, \"milk\": 3, \"eggs\": 12}). Generate a summary of available vs out-of-stock items.",
+    "description": "List processing with API lookup and categorization"
+  },
+  {
+    "id": "end2end_1",
+    "tier": "end-to-end",
+    "prompt": "Find five recent academic papers on CRISPR applications in agriculture (you may assume citations are known). Extract each paper's title and abstract. Write a 200-word summary that cites each title at least once.",
+    "description": "Research synthesis with citation integration"
+  },
+  {
+    "id": "end2end_2", 
+    "tier": "end-to-end",
+    "prompt": "A user says: \"My router keeps dropping every few minutes.\" 1) Check a troubleshooting knowledge-base (assume KB returns two steps: \"Restart router,\" \"Check firmware version\"). 2) If neither fixes the problem, create a Jira ticket in project \"NETSUP\" via POST /jira/ticket with fields {\"project\": \"NETSUP\", \"description\": <user's description + attempted fixes>}.",
+    "description": "Support workflow: triage → troubleshoot → escalate"
+  },
+  {
+    "id": "end2end_3",
+    "tier": "end-to-end", 
+    "prompt": "Plan a 3-day itinerary for visiting San Francisco. Include: 1) Must-see attractions with estimated visit times, 2) Restaurant recommendations for each meal, 3) Transportation between locations, 4) Total estimated budget breakdown. Present as a structured day-by-day plan.",
+    "description": "Complex planning task with multiple constraints and optimization"
+  }
+] 

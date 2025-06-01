@@ -1,0 +1,62 @@
+[
+  {
+    "id": "anchor_arithmetic",
+    "prompt": "Compute 12 × 34.",
+    "gold_answer": "408",
+    "gold_metrics": {
+      "Arithmetic Correctness": 1,
+      "Chain-of-Thought Presence": 0,
+      "JSON Field Accuracy": 0,
+      "Plan Coherence": 0,
+      "Message Appropriateness": 0
+    }
+  },
+  {
+    "id": "anchor_json",
+    "prompt": "Extract name from {\"name\": \"Bob\", \"age\": 25}.",
+    "gold_answer": "Bob",
+    "gold_metrics": {
+      "Arithmetic Correctness": 0,
+      "Chain-of-Thought Presence": 0,
+      "JSON Field Accuracy": 1,
+      "Plan Coherence": 0,
+      "Message Appropriateness": 0
+    }
+  },
+  {
+    "id": "anchor_reasoning",
+    "prompt": "If a train travels 60 mph for 2.5 hours, how far does it go? Show your work.",
+    "gold_answer": "150 miles",
+    "gold_metrics": {
+      "Arithmetic Correctness": 1,
+      "Chain-of-Thought Presence": 1,
+      "JSON Field Accuracy": 0,
+      "Plan Coherence": 1,
+      "Message Appropriateness": 0
+    }
+  },
+  {
+    "id": "anchor_message",
+    "prompt": "Write a brief, polite email to inform a customer that their order will be delayed by 2 days.",
+    "gold_answer": "Subject: Update on Your Order\n\nDear Customer,\n\nWe wanted to inform you that your recent order will be delayed by 2 days due to unexpected shipping delays. We apologize for any inconvenience and appreciate your patience.\n\nBest regards,\nCustomer Service Team",
+    "gold_metrics": {
+      "Arithmetic Correctness": 0,
+      "Chain-of-Thought Presence": 0,
+      "JSON Field Accuracy": 0,
+      "Plan Coherence": 1,
+      "Message Appropriateness": 1
+    }
+  },
+  {
+    "id": "anchor_api_plan",
+    "prompt": "Describe the steps to get user data: 1) Call GET /users/{id} 2) If user exists, call GET /users/{id}/preferences 3) Combine the data into a single response.",
+    "gold_answer": "Step 1: Make GET request to /users/{id} endpoint\nStep 2: Check if response is successful and user exists\nStep 3: If user exists, make GET request to /users/{id}/preferences\nStep 4: Merge user data and preferences into combined response object",
+    "gold_metrics": {
+      "Arithmetic Correctness": 0,
+      "Chain-of-Thought Presence": 1,
+      "JSON Field Accuracy": 0,
+      "Plan Coherence": 1,
+      "Message Appropriateness": 0
+    }
+  }
+] 

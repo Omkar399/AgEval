@@ -1,0 +1,11 @@
+{
+  "timestamp": "2025-05-31T18:59:32.187860",
+  "data": {
+    "task_id": "atomic_1",
+    "prompt": "Compute 47 \u00d7 382 + 129.",
+    "response": "47 \u00d7 382 = 17994\n\n17994 + 129 = 18123\n\nTherefore, 47 \u00d7 382 + 129 = $\\boxed{18123}$\n",
+    "timestamp": "2025-05-31T18:59:32.187775",
+    "model": "gemini-1.5-flash",
+    "temperature": 0.7
+  }
+}

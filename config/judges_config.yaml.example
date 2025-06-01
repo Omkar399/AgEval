@@ -1,0 +1,49 @@
+judges:
+  - name: JudgeA
+    model: gpt-4-turbo-2024-04-09
+    provider: openai
+    api_key: YOUR_OPENAI_API_KEY
+    temperature: 0
+    max_tokens: 4000
+    description: "OpenAI GPT-4 Turbo - Strong reasoning and consistency"
+    
+  - name: JudgeB
+    model: claude-sonnet-4-20250514
+    provider: anthropic
+    api_key: YOUR_ANTHROPIC_API_KEY
+    temperature: 0
+    max_tokens: 4000
+    description: "Anthropic Claude 4 Sonnet - High-performance model with exceptional reasoning (2025)"
+    
+  - name: JudgeC
+    model: gemini-2.5-pro-preview
+    provider: google
+    api_key: YOUR_GOOGLE_API_KEY
+    temperature: 0
+    max_tokens: 4000
+    description: "Google Gemini 2.5 Pro Preview - Most advanced reasoning model (2025)"
+
+# Agent configuration (the AI being evaluated)
+agent:
+  name: TestAgent
+  model: gemini-2.0-flash-lite
+  provider: google
+  api_key: YOUR_GOOGLE_API_KEY
+  temperature: 0.7
+  max_tokens: 2000
+  description: "Google Gemini 2.0 Flash-Lite - Most cost-efficient model (2025)"
+
+# Evaluation settings
+evaluation:
+  batch_size: 5  # Number of tasks per batch for judges
+  max_retries: 3
+  retry_delay: 1  # seconds
+  calibration_threshold: 0.3  # Max acceptable bias
+  agreement_threshold: 0.6  # Min Cohen's kappa for reliability
+  
+# Cost optimization
+optimization:
+  cache_responses: true
+  cache_duration: 86400  # 24 hours in seconds
+  parallel_judges: true
+  compress_prompts: true 
