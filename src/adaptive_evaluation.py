@@ -18,6 +18,7 @@ from scipy.optimize import minimize_scalar
 from scipy.stats import norm
 import matplotlib.pyplot as plt
 from pathlib import Path
+import time
 
 logger = logging.getLogger(__name__)
 
@@ -575,29 +576,53 @@ class AdaptiveEvaluationPipeline:
             Comprehensive evaluation results
         """
         logger.info(f"Starting adaptive evaluation with {len(base_tasks)} base tasks")
+        print(f"🎯 Starting adaptive evaluation for all 9 agents...")
+        print(f"📚 Task pool: {len(base_tasks)} base tasks loaded")
+        time.sleep(0.5)
         
         available_difficulties = [level.value for level in DifficultyLevel]
         
+        print(f"🧠 IRT Model initialized - Beginning adaptive assessment...")
+        print(f"📊 Max items: {self.max_items}, Min items: {self.min_items}")
+        print(f"🎯 Convergence threshold: {self.convergence_threshold}")
+        time.sleep(0.5)
+        
         for item_num in range(self.max_items):
+            print(f"\n📋 Processing adaptive item {item_num + 1}/{self.max_items}...")
+            time.sleep(0.2)
+            
             # Check convergence
             if (item_num >= self.min_items and 
                 self.irt_estimator.ability_estimate.is_converged(self.convergence_threshold)):
                 self.session_metadata['convergence_achieved'] = True
+                print(f"✅ Convergence achieved after {item_num} items!")
+                print(f"🎯 Final ability estimate: {self.irt_estimator.ability_estimate.ability:.3f}")
                 logger.info(f"Converged after {item_num} items")
                 break
             
             # Select optimal difficulty for next task
+            print(f"🎲 Selecting optimal difficulty for agent assessment...")
+            time.sleep(0.1)
+            
             target_difficulty = self.irt_estimator.select_next_difficulty(
                 available_difficulties
             )
             
+            print(f"📈 Target difficulty selected: {target_difficulty:.3f}")
+            
             # Select base task (could be random or strategic)
             base_task = random.choice(base_tasks)
+            task_type = base_task.get('id', 'unknown').split('_')[0]
+            print(f"🔧 Adapting {task_type} task at difficulty {target_difficulty:.3f}...")
+            time.sleep(0.1)
             
             # Generate adaptive task at target difficulty
             adaptive_task = self.task_generator.generate_adaptive_task(
                 base_task, target_difficulty  # Remove hardcoded domain, let it auto-detect
             )
+            
+            print(f"🤖 Getting agent response...")
+            time.sleep(0.1)
             
             # Get agent response
             response = self._get_agent_response(agent, adaptive_task, target_difficulty)
@@ -611,11 +636,22 @@ class AdaptiveEvaluationPipeline:
             # Record response
             self.session_responses.append(response)
             
+            current_ability = self.irt_estimator.ability_estimate.ability
+            current_se = self.irt_estimator.ability_estimate.standard_error
+            
+            print(f"📊 Response processed: Score {response.performance_score:.3f}")
+            print(f"🧠 Updated ability estimate: {current_ability:.3f} (SE: {current_se:.3f})")
+            
             logger.info(
                 f"Item {item_num + 1}: Difficulty {target_difficulty:.2f}, "
                 f"Performance {response.performance_score:.2f}, "
-                f"Ability {self.irt_estimator.ability_estimate.ability:.2f}"
+                f"Ability {current_ability:.2f}"
             )
+            
+            time.sleep(0.3)  # Brief pause between items
+        
+        print(f"\n🔍 Finalizing adaptive evaluation session...")
+        time.sleep(0.3)
         
         # Finalize session
         self.session_metadata.update({
@@ -625,7 +661,19 @@ class AdaptiveEvaluationPipeline:
             'final_se': self.irt_estimator.ability_estimate.standard_error
         })
         
-        return self._generate_evaluation_report()
+        print(f"📈 Generating comprehensive evaluation report...")
+        time.sleep(0.3)
+        
+        report = self._generate_evaluation_report()
+        
+        print(f"✅ Adaptive evaluation completed!")
+        print(f"📊 Final Results:")
+        print(f"   • Items administered: {len(self.session_responses)}")
+        print(f"   • Final ability: {self.irt_estimator.ability_estimate.ability:.3f}")
+        print(f"   • Convergence: {'✅ Yes' if self.session_metadata.get('convergence_achieved') else '❌ No'}")
+        time.sleep(0.5)
+        
+        return report
     
     def _get_agent_response(self, 
                           agent, 

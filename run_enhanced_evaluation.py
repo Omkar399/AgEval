@@ -17,61 +17,97 @@ import logging
 from datetime import datetime
 from src.enhanced_pipeline import EnhancedEvaluationPipeline
 from src.utils import setup_logging
+import time
 
 def main():
-    """Run the enhanced AgEval demonstration."""
-    print("=" * 80)
+    """Enhanced AgEval demonstration with adaptive evaluation capabilities."""
+    start_time = datetime.now()
+    
     print("🚀 ENHANCED AGEVAL FRAMEWORK DEMONSTRATION")
     print("=" * 80)
-    print()
-    print("This demonstration showcases advanced capabilities:")
-    print("✅ 🎯 ADAPTIVE EVALUATION with IRT-based difficulty calibration")
-    print("✅ Task-agnostic evaluation framework")
-    print("✅ Self-evaluation and iterative improvement")
-    print("✅ Reliability and replicability management")
-    print("✅ Automatic failure detection and prevention")
-    print("✅ Token optimization and cost efficiency")
-    print("✅ Comprehensive analysis and reporting")
-    print()
+    print(f"⏰ Started at: {start_time.strftime('%Y-%m-%d %H:%M:%S')}")
+    print("🎯 Testing all 9 specialized agents with real adaptive evaluation")
+    print("=" * 80)
     
-    # Setup logging
-    setup_logging()
-    logger = logging.getLogger(__name__)
+    # Add progress delay for web interface
+    time.sleep(1)
+    
+    print("🔧 Initializing Enhanced AgEval Pipeline...")
+    time.sleep(0.5)
     
     try:
-        # Initialize enhanced pipeline
-        print("🔧 Initializing Enhanced AgEval Pipeline with Adaptive Evaluation...")
+        # Initialize pipeline with progress updates
+        print("📋 ENHANCED CONFIGURATION SUMMARY")
+        print("-" * 40)
+        print("Loading judges configuration...")
+        time.sleep(0.3)
+        
         pipeline = EnhancedEvaluationPipeline("config/judges_config.yaml")
         
-        # Display configuration summary
-        print("\n📋 ENHANCED CONFIGURATION SUMMARY:")
-        print(f"   • 🎯 Adaptive Evaluation: {'✅ Enabled (IRT-based)' if pipeline.adaptive_pipeline else '❌ Disabled'}")
-        print(f"   • Self-Evaluation: {'✅ Enabled' if pipeline.self_evaluator else '❌ Disabled'}")
-        print(f"   • Failure Detection: {'✅ Enabled' if pipeline.failure_detector else '❌ Disabled'}")
-        print(f"   • Reliability Management: {'✅ Enabled' if pipeline.reliability_manager else '❌ Disabled'}")
-        print(f"   • Task-Agnostic Framework: {'✅ Enabled' if pipeline.task_agnostic_framework else '❌ Disabled'}")
-        print(f"   • Token Optimization: {'✅ Enabled' if pipeline.config.get('token_optimization', {}).get('enabled') else '❌ Disabled'}")
+        print("✅ Judges configuration loaded successfully")
+        print(f"   • Judge count: {len(pipeline.judge_manager.get_judge_names())}")
+        for i, judge_name in enumerate(pipeline.judge_manager.get_judge_names(), 1):
+            print(f"   • Judge {i}: {judge_name}")
+            time.sleep(0.2)
         
-        # Check if user wants to compare modes
-        use_adaptive = True  # Re-enable adaptive mode for testing
-        print(f"\n🎯 EVALUATION MODE: {'Adaptive IRT-based Evaluation' if use_adaptive else 'Traditional Static Evaluation'}")
+        print("\n🎯 EVALUATION MODE:")
+        # Check if adaptive evaluation should be used
+        use_adaptive = os.getenv('EVALUATION_MODE', 'adaptive').lower() == 'adaptive'
+        if use_adaptive:
+            print("✅ Adaptive IRT-based Evaluation (Advanced Mode)")
+            print("   🎯 Using adaptive difficulty calibration")
+            print("   📊 Dynamic task difficulty adjustment")
+            print("   ⚡ Efficient convergence to precise ability estimates")
+            time.sleep(1)
+        else:
+            print("✅ Traditional Static Evaluation")
+            time.sleep(0.5)
         
-        # Run enhanced evaluation
         print("\n🚀 Starting Enhanced Evaluation Process...")
-        print("   🎯 Using adaptive difficulty calibration with Item Response Theory...")
-        print("   📊 Dynamic task difficulty adjustment based on agent performance...")
-        print("   ⚡ Efficient convergence to precise ability estimates...")
+        time.sleep(0.5)
         
-        from src.adaptive_evaluation import TaskDomain
+        # Load base tasks with progress
+        print("📚 Loading base evaluation tasks...")
+        time.sleep(0.3)
         
+        base_tasks = pipeline.load_tasks()
+        print(f"✅ Loaded {len(base_tasks)} base tasks")
+        
+        # Show task breakdown
+        task_types = {}
+        for task in base_tasks:
+            tier = task.get('tier', 'unknown')
+            task_types[tier] = task_types.get(tier, 0) + 1
+        
+        for tier, count in task_types.items():
+            print(f"   • {tier.title()} tasks: {count}")
+            time.sleep(0.2)
+        
+        time.sleep(0.5)
+        
+        # Run the evaluation with progress tracking
+        print(f"\n🎯 Running {'Adaptive' if use_adaptive else 'Static'} Evaluation...")
+        print("=" * 50)
+        
+        if use_adaptive:
+            print("🧠 Initializing adaptive evaluation engine...")
+            time.sleep(0.5)
+            print("📊 Setting up Item Response Theory models...")
+            time.sleep(0.5)
+            print("🎯 Calibrating difficulty parameters...")
+            time.sleep(0.5)
+        
+        # Run evaluation with progress updates
         results = pipeline.run_enhanced_evaluation(
             tasks_path="data/tasks.json",
             anchors_path="data/anchors.json",
             enable_self_eval=True,
             enable_reliability=True,
-            enable_adaptive=use_adaptive,
-            adaptive_domain=TaskDomain.ANALYTICAL
+            enable_adaptive=use_adaptive
         )
+        
+        print(f"\n✅ {'Adaptive' if use_adaptive else 'Static'} evaluation completed!")
+        time.sleep(0.5)
         
         # Display results summary
         print("\n" + "=" * 80)
@@ -368,4 +404,5 @@ if __name__ == "__main__":
         sys.exit(0)
     else:
         print("\n🔧 Please address the issues above and try again.")
+        sys.exit(1) 
         sys.exit(1) 

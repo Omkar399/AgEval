@@ -276,6 +276,112 @@ Please provide an improved response that addresses these issues while maintainin
         
         return recommendations
 
+    def evaluate_and_improve_response(self, 
+                                    prompt: str, 
+                                    response: str, 
+                                    task_id: str) -> Dict[str, Any]:
+        """
+        Evaluate and improve a response for adaptive evaluation.
+        
+        Args:
+            prompt: The task prompt
+            response: The agent's response
+            task_id: The task identifier
+            
+        Returns:
+            Dictionary with final_response and evaluation details
+        """
+        try:
+            # Create a simplified task dict for compatibility
+            task = {
+                'id': task_id,
+                'prompt': prompt
+            }
+            
+            # Create basic metrics for self-evaluation
+            basic_metrics = [
+                {
+                    'name': 'Task_Completion',
+                    'definition': 'How well the response addresses the task requirements',
+                    'scale': '0-1 (0=not addressed, 1=fully addressed)'
+                },
+                {
+                    'name': 'Response_Quality', 
+                    'definition': 'Overall quality and coherence of the response',
+                    'scale': '0-1 (0=poor quality, 1=excellent quality)'
+                },
+                {
+                    'name': 'Accuracy',
+                    'definition': 'Factual correctness and logical soundness',
+                    'scale': '0-1 (0=incorrect, 1=accurate)'
+                }
+            ]
+            
+            # Perform self-evaluation
+            evaluation = self.evaluate_response(task, response, basic_metrics)
+            
+            # If confidence is low, attempt improvement
+            if evaluation['overall_confidence'] < self.confidence_threshold:
+                logger.info(f"Response confidence ({evaluation['overall_confidence']:.3f}) below threshold, attempting improvement")
+                
+                # For adaptive evaluation, we'll do a simplified improvement
+                # since we don't have access to the original agent here
+                improvement_suggestions = evaluation.get('improvement_suggestions', [])
+                
+                if improvement_suggestions:
+                    # Build improved response prompt
+                    improvement_prompt = self._build_improvement_prompt(task, response, evaluation)
+                    
+                    try:
+                        # Try to get improved response from self-judge
+                        improved_response_data = self.self_judge.call(improvement_prompt)
+                        
+                        # Extract improved response
+                        if isinstance(improved_response_data, str):
+                            improved_response = improved_response_data
+                        else:
+                            improved_response = improved_response_data.get('response', response)
+                        
+                        return {
+                            'final_response': improved_response,
+                            'original_response': response,
+                            'evaluation': evaluation,
+                            'improved': True,
+                            'improvement_applied': True
+                        }
+                        
+                    except Exception as e:
+                        logger.warning(f"Failed to generate improved response: {e}")
+                        # Fall back to original response
+                        return {
+                            'final_response': response,
+                            'original_response': response,
+                            'evaluation': evaluation,
+                            'improved': False,
+                            'improvement_attempted': True,
+                            'improvement_error': str(e)
+                        }
+            
+            # Response is good enough, return as-is
+            return {
+                'final_response': response,
+                'original_response': response,
+                'evaluation': evaluation,
+                'improved': False,
+                'confidence': evaluation['overall_confidence']
+            }
+            
+        except Exception as e:
+            logger.error(f"Self-evaluation failed for {task_id}: {e}")
+            # Return original response if evaluation fails
+            return {
+                'final_response': response,
+                'original_response': response,
+                'evaluation': None,
+                'improved': False,
+                'error': str(e)
+            }
+
 class FailureDetector:
     """Detects and prevents common failure cases in agent responses."""
     
